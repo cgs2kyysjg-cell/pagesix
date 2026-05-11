@@ -80,12 +80,13 @@
     font-family: 'Bevan', 'Bookman Old Style', serif;
     font-weight: 400;
     font-style: normal;
-    font-size: clamp(34px, 5vw, 58px);
+    font-size: clamp(22px, 3.6vw, 44px);
     line-height: 1;
     color: #fff;
     letter-spacing: 0;
     white-space: nowrap;
     text-transform: none;
+    min-width: 0;
   }
 
   /* Yellow strip */
@@ -710,7 +711,7 @@
     /* Header: hide left section, logo left, buttons right */
     .top-header { grid-template-columns: 1fr auto; gap: 8px; padding: 12px 16px; }
     .top-header .left { display: none; }
-    .logo { font-size: clamp(28px, 5vw, 42px); }
+    .logo { font-size: clamp(18px, 3.2vw, 30px); }
 
     /* Hero */
     .submit-hero { padding: 40px 16px 48px 16px; }
@@ -729,7 +730,7 @@
 
     /* Header */
     .top-header { padding: 10px 12px; }
-    .logo { font-size: 28px; }
+    .logo { font-size: 18px; }
     .top-header .nav-btn { padding: 7px 10px; font-size: 11px; letter-spacing: 1px; }
     .top-header .nav-btn svg { width: 12px; height: 12px; }
 
@@ -961,7 +962,7 @@
     </button>
   </div>
 
-  <div class="logo">Page Six</div>
+  <div class="logo">Page Six: The Party</div>
 
   <div class="right">
     <button class="nav-btn cta" id="submit-toggle-top">
@@ -982,7 +983,7 @@
   <div class="inner">
     <div>
       <div class="eyebrow">Monday, May 25 · Invite Only</div>
-      <h1>Page <span class="accent">Six:</span><br>The Party</h1>
+      <h1>You Are<br>The <span class="accent">Headline.</span></h1>
       <p class="deck">
         Welcome to the <strong>Page 6 Party</strong>. This year, the gossip writes itself — because <strong>you write it.</strong>
         Submit your hottest, most scandalous, completely-fabricated-or-not-at-all headlines.
