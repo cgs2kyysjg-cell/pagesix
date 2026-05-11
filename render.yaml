@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: page-six-party
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: page-six-db
+          property: connectionString
+
+databases:
+  - name: page-six-db
+    plan: free
+    databaseName: page_six
+    user: page_six

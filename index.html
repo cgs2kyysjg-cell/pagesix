@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Page 6 Party · May 25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Bevan&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --yellow: #f5d800;
+    --ink: #111;
+    --muted: #666;
+    --line: #e6e6e6;
+    --bg: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.4;
+    padding-bottom: 80px;
+  }
+
+  /* ---------- Top black header ---------- */
+  .top-header {
+    background: var(--black);
+    color: #fff;
+    padding: 14px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+  }
+  .top-header .left,
+  .top-header .right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .top-header .right { justify-content: flex-end; }
+
+  .nav-btn {
+    border: 1.5px solid #fff;
+    background: transparent;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .nav-btn:hover { background: #fff; color: var(--black); }
+  .nav-btn.cta { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+  .nav-btn.cta:hover { background: #fff; border-color: #fff; }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:hover { color: var(--yellow); }
+  .icon-btn svg { width: 20px; height: 20px; }
+
+  .logo {
+    font-family: 'Bevan', 'Bookman Old Style', serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1;
+    color: #fff;
+    letter-spacing: 0;
+    white-space: nowrap;
+    text-transform: none;
+  }
+
+  /* Yellow strip */
+  .yellow-strip {
+    background: var(--yellow);
+    height: 8px;
+  }
+
+  /* ---------- THE BIG SUBMIT HERO ---------- */
+  .submit-hero {
+    background: var(--black);
+    color: #fff;
+    padding: 56px 24px 64px 24px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 8px solid var(--yellow);
+  }
+  .submit-hero .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .submit-hero .eyebrow {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: inline-block;
+    border-bottom: 3px solid var(--yellow);
+    padding-bottom: 4px;
+  }
+  .submit-hero h1 {
+    font-family: 'Bevan', 'Bookman Old Style', serif;
+    font-weight: 400;
+    font-size: clamp(44px, 6.5vw, 84px);
+    line-height: 0.95;
+    margin-bottom: 18px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .submit-hero h1 .accent { color: var(--yellow); }
+  .submit-hero .deck {
+    font-size: 19px;
+    line-height: 1.5;
+    color: #e8e8e8;
+    margin-bottom: 22px;
+    max-width: 560px;
+  }
+  .submit-hero .deck strong { color: #fff; }
+
+  .submit-hero .cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .submit-hero .big-btn {
+    background: var(--yellow);
+    color: var(--black);
+    border: 3px solid var(--yellow);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 18px 28px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .submit-hero .big-btn:hover { transform: translateY(-2px); background: #fff; border-color: #fff; }
+  .submit-hero .big-btn .arrow { font-size: 22px; line-height: 0; }
+  .submit-hero .note {
+    color: #aaa;
+    font-size: 13px;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* The "how-it-works" card */
+  .how-card {
+    background: #fff;
+    color: var(--ink);
+    padding: 26px 24px 22px 24px;
+    position: relative;
+    border-top: 6px solid var(--yellow);
+  }
+  .how-card::before {
+    content: 'EXCLUSIVE';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    transform: translateY(-50%);
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 3px;
+    padding: 6px 12px;
+  }
+  .how-card h3 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.05;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .how-card ol {
+    list-style: none;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+  }
+  .how-card ol li {
+    counter-increment: step;
+    padding: 10px 0 10px 42px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.4;
+    border-top: 1px solid var(--line);
+  }
+  .how-card ol li:first-child { border-top: none; padding-top: 6px; }
+  .how-card ol li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 28px;
+    height: 28px;
+    background: var(--black);
+    color: var(--yellow);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .how-card .meta {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+  .how-card .meta strong { color: var(--ink); }
+
+  /* ---------- Marquee of section labels ---------- */
+  .label-strip {
+    background: #fffbe0;
+    border-bottom: 1px solid var(--line);
+    padding: 12px 24px;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    overflow: hidden;
+  }
+  .label-strip span { margin: 0 14px; color: var(--ink); font-weight: 600; }
+  .label-strip .dot { color: var(--yellow); font-weight: 900; }
+
+  /* ---------- Sample headlines ---------- */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 24px 24px 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 40px;
+  }
+
+  .hero { min-width: 0; }
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    border-top: 3px solid var(--black);
+    border-bottom: 1px solid var(--black);
+    padding: 8px 0;
+    margin-bottom: 22px;
+    color: var(--black);
+  }
+  .section-title .tag {
+    background: var(--yellow);
+    color: var(--black);
+    padding: 2px 8px;
+    margin-right: 8px;
+    font-size: 11px;
+  }
+
+  /* Lead story */
+  .lead-story {
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .lead-story .kicker {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--black);
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: inline-block;
+    border-bottom: 3px solid var(--yellow);
+    padding-bottom: 2px;
+  }
+  .lead-story h2 {
+    font-family: 'Anton', 'Oswald', Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(46px, 6.5vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .lead-story .deck {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #222;
+    margin-bottom: 12px;
+    max-width: 680px;
+  }
+  .lead-story .byline {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  /* Story cards */
+  .story-card {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .story-card:last-child { border-bottom: none; }
+  .story-card .badge {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--yellow);
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    position: relative;
+  }
+  .story-card:nth-child(odd) .badge { background: var(--black); color: var(--yellow); }
+  .story-card .badge .num {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 5px;
+    letter-spacing: 0.5px;
+  }
+  .story-card:nth-child(odd) .badge .num { background: var(--yellow); color: var(--black); }
+  .story-card .body { min-width: 0; }
+  .story-card .body .kicker {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b8000d;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .story-card .body h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .story-card .body p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .story-card .body .byline {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* Sidebar */
+  .sidebar { min-width: 0; }
+  .sidebar-cta {
+    background: var(--black);
+    color: #fff;
+    padding: 22px 20px;
+    margin-bottom: 24px;
+    border-bottom: 5px solid var(--yellow);
+    position: relative;
+  }
+  .sidebar-cta::before {
+    content: 'TIPS WANTED';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    transform: translateY(-50%);
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 5px 10px;
+  }
+  .sidebar-cta h4 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.1;
+    margin: 8px 0 10px 0;
+    color: #fff;
+  }
+  .sidebar-cta p {
+    font-size: 14px;
+    color: #ddd;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .sidebar-cta button {
+    width: 100%;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .sidebar-cta button:hover { background: #fff; }
+
+  .trending h3 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .trending .sub {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--yellow);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .trending-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .trending-item:last-child { border-bottom: none; }
+  .trending-item .thumb {
+    width: 90px;
+    height: 90px;
+    background: var(--black);
+    color: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    position: relative;
+  }
+  .trending-item:nth-child(even) .thumb { background: var(--yellow); color: var(--black); }
+  .trending-item .thumb .views {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+  .trending-item:nth-child(even) .thumb .views { background: var(--black); color: var(--yellow); }
+  .trending-item h5 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .trending-item .byline {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: var(--black);
+    color: #aaa;
+    text-align: center;
+    padding: 24px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 40px;
+  }
+  footer .yellow { color: var(--yellow); }
+
+  /* ---------- Floating submit popup ---------- */
+  .submit-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    background: var(--yellow);
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 14px 22px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .submit-toggle:hover { transform: translateY(-2px); background: #fff; }
+  .submit-toggle .plus { margin-right: 6px; }
+
+  .submit-popup {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 400px;
+    max-width: calc(100vw - 48px);
+    background: #fff;
+    border: 2px solid var(--black);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    z-index: 60;
+    padding: 0;
+    display: none;
+    animation: popIn 0.2s ease-out;
+  }
+  .submit-popup.open { display: block; }
+  @keyframes popIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .submit-popup .popup-header {
+    background: var(--black);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--yellow);
+  }
+  .submit-popup .popup-header h3 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    color: #fff;
+  }
+  .submit-popup .close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .submit-popup .close:hover { color: var(--yellow); }
+  .submit-popup .popup-body { padding: 18px 18px 20px 18px; }
+  .submit-popup .intro {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  .submit-popup label {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+  .submit-popup input[type="text"],
+  .submit-popup textarea {
+    width: 100%;
+    border: 1.5px solid var(--black);
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 8px 10px;
+    outline: none;
+    color: var(--ink);
+  }
+  .submit-popup textarea { resize: vertical; min-height: 60px; }
+  .submit-popup input[type="text"]:focus,
+  .submit-popup textarea:focus { border-color: #b8000d; }
+  .submit-popup button.send {
+    margin-top: 16px;
+    width: 100%;
+    background: var(--yellow);
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 12px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  .submit-popup button.send:hover { background: var(--black); color: var(--yellow); }
+
+  /* Thank-you state inside popup */
+  .thanks {
+    text-align: center;
+    padding: 20px 4px 8px 4px;
+  }
+  .thanks .stamp {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 8px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 12px;
+    transform: rotate(-3deg);
+    margin-bottom: 14px;
+    border: 2px solid var(--black);
+  }
+  .thanks h4 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .thanks p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .thanks .again {
+    background: transparent;
+    border: 1.5px solid var(--black);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 10px 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .thanks .again:hover { background: var(--black); color: var(--yellow); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .submit-hero .inner { grid-template-columns: 1fr; gap: 32px; }
+    .page { grid-template-columns: 1fr; gap: 24px; }
+    .top-header { grid-template-columns: auto 1fr auto; gap: 8px; }
+    .top-header .left .nav-btn { display: none; }
+  }
+  @media (max-width: 560px) {
+    .submit-popup { width: calc(100vw - 32px); right: 16px; bottom: 16px; }
+    .submit-toggle { right: 16px; bottom: 16px; }
+    .lead-story h2 { font-size: 40px; }
+    .story-card { grid-template-columns: 80px 1fr; }
+  }
+
+  /* ---------- Admin overlay ---------- */
+  .admin-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #f3f3f3;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .admin-overlay.open { display: block; }
+  .admin-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--black);
+    color: #fff;
+    padding: 16px 24px;
+    margin: 0 -24px 24px -24px;
+    border-bottom: 6px solid var(--yellow);
+  }
+  .admin-header h2 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: 28px;
+    color: #fff;
+  }
+  .admin-close {
+    background: transparent;
+    border: 1.5px solid #fff;
+    color: #fff;
+    width: 36px; height: 36px;
+    font-size: 22px;
+    cursor: pointer;
+    font-family: serif;
+    line-height: 1;
+  }
+  .admin-close:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+  .admin-section {
+    background: #fff;
+    padding: 28px;
+    border: 1px solid var(--line);
+  }
+  .admin-section p { font-size: 15px; color: #333; margin-bottom: 14px; line-height: 1.5; }
+  .admin-section label {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .admin-section input[type="email"] {
+    width: 100%;
+    max-width: 360px;
+    border: 1.5px solid var(--black);
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 12px;
+    outline: none;
+    margin-bottom: 14px;
+  }
+  .admin-section input[type="email"]:focus { border-color: #b8000d; }
+  .admin-btn {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    border: 2px solid var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 11px 18px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .admin-btn:hover { background: var(--black); color: var(--yellow); }
+  .admin-btn-sm {
+    background: #fff;
+    color: var(--black);
+    border: 1.5px solid var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    padding: 6px 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .admin-btn-sm:hover { background: var(--black); color: var(--yellow); }
+  .admin-note { font-size: 13px; color: var(--muted); margin-top: 12px; line-height: 1.5; }
+  .admin-note.ok { color: #1a7a1a; }
+  .admin-note.err { color: #b8000d; }
+  .admin-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .admin-toolbar #admin-user-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-right: auto;
+  }
+  .admin-stats {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+  .admin-stats strong { color: #b8000d; }
+  .admin-table-wrap { overflow-x: auto; }
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .admin-table th {
+    background: var(--black);
+    color: var(--yellow);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 11px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .admin-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .admin-table tr:hover td { background: #fffce6; }
+  .admin-table td:nth-child(1) { white-space: nowrap; color: var(--muted); font-family: 'Oswald', sans-serif; font-size: 12px; }
+  .admin-table td:nth-child(2) { color: #b8000d; font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; }
+  .admin-table td:nth-child(3) { font-weight: 700; min-width: 240px; }
+  .admin-table td:nth-child(5) { white-space: nowrap; color: var(--muted); font-size: 12px; }
+  .admin-link { color: var(--yellow); text-decoration: none; margin-left: 8px; opacity: 0.6; }
+  .admin-link:hover { opacity: 1; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- Top black header -->
+<header class="top-header">
+  <div class="left">
+    <button class="nav-btn" aria-label="Sections">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      Sections
+    </button>
+    <button class="icon-btn" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="icon-btn" aria-label="Newsletter">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="0"/><polyline points="3,7 12,13 21,7"/></svg>
+    </button>
+  </div>
+
+  <div class="logo">Page Six</div>
+
+  <div class="right">
+    <button class="nav-btn cta" id="submit-toggle-top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
+      Submit a Tip
+    </button>
+    <button class="nav-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Log In
+    </button>
+  </div>
+</header>
+
+<div class="yellow-strip"></div>
+
+<!-- THE BIG SUBMIT HERO -->
+<section class="submit-hero">
+  <div class="inner">
+    <div>
+      <div class="eyebrow">Monday, May 25 · Invite Only</div>
+      <h1>You Are<br>The <span class="accent">Headline.</span></h1>
+      <p class="deck">
+        Welcome to the <strong>Page 6 Party</strong>. This year, the gossip writes itself — because <strong>you write it.</strong>
+        Submit your hottest, most scandalous, completely-fabricated-or-not-at-all headlines.
+        The best ones will be read aloud, printed, and immortalized at the party.
+      </p>
+      <div class="cta-row">
+        <button class="big-btn" id="hero-submit-btn">
+          Submit Your Headline <span class="arrow">›</span>
+        </button>
+        <span class="note">Takes 30 seconds · Submissions are private</span>
+      </div>
+    </div>
+
+    <aside class="how-card">
+      <h3>How It Works</h3>
+      <ol>
+        <li>Hit the yellow <strong>Submit</strong> button — top right or bottom of the page.</li>
+        <li>Write a headline. The juicier, sillier, or more dramatic, the better.</li>
+        <li>Add your byline so we know who broke the story — or stay anonymous if you want.</li>
+        <li>Send to press. The best headlines get the spotlight on <strong>May 25</strong>.</li>
+      </ol>
+      <div class="meta">
+        <span>Deadline · <strong>May 25, 6 PM</strong></span>
+        <span>Submissions · <strong>Unlimited</strong></span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- Label strip -->
+<div class="label-strip">
+  <span>Gossip</span><span class="dot">✦</span>
+  <span>Sighted</span><span class="dot">✦</span>
+  <span>Scandal</span><span class="dot">✦</span>
+  <span>Style</span><span class="dot">✦</span>
+  <span>Overheard</span><span class="dot">✦</span>
+  <span>Power Couples</span><span class="dot">✦</span>
+  <span>Exclusives</span>
+</div>
+
+<!-- Sample headlines (static / decorative) -->
+<main class="page">
+  <section class="hero">
+    <h3 class="section-title"><span class="tag">SAMPLE</span> What A Headline Looks Like</h3>
+
+    <article class="lead-story">
+      <div class="kicker">Breaking</div>
+      <h2>Sandals With Socks Sweep The Floor; Crowd Stunned</h2>
+      <p class="deck">A bold sartorial choice has divided the dancefloor into believers and skeptics. By the second chorus, the skeptics had quietly converted.</p>
+      <div class="byline">By A Concerned Onlooker</div>
+    </article>
+
+    <article class="story-card">
+      <div class="badge">♥<span class="num">38,204</span></div>
+      <div class="body">
+        <div class="kicker">Gossip</div>
+        <h4>Mystery Kitchen Romance Stuns Cheese Plate Witnesses</h4>
+        <p>Sources close to the brie report prolonged eye contact and at least one shared cracker.</p>
+        <div class="byline">By Our Hallway Correspondent</div>
+      </div>
+    </article>
+
+    <article class="story-card">
+      <div class="badge">!<span class="num">52,910</span></div>
+      <div class="body">
+        <div class="kicker">Politics</div>
+        <h4>Aux Cord Coup In Progress; DJ Cries Foul</h4>
+        <p>A peaceful transition of power is, as of press time, not assured. Negotiations now hinge on a single Robyn track.</p>
+        <div class="byline">By The Living Room Bureau</div>
+      </div>
+    </article>
+
+    <article class="story-card">
+      <div class="badge">✦<span class="num">27,341</span></div>
+      <div class="body">
+        <div class="kicker">Style</div>
+        <h4>Two-Fisted Drinking Officially Declared "A Look"</h4>
+        <p>Fashion editors stunned. "It just makes sense," said one early adopter, gesturing with both.</p>
+        <div class="byline">By The Fashion Desk</div>
+      </div>
+    </article>
+
+    <article class="story-card">
+      <div class="badge">◉<span class="num">61,005</span></div>
+      <div class="body">
+        <div class="kicker">Sighted</div>
+        <h4>Plus-One Arrives With Three Bottles, Is Immediately Adored</h4>
+        <p>Identity still being verified. The wine, however, has been authenticated and consumed.</p>
+        <div class="byline">By A Doorway Source</div>
+      </div>
+    </article>
+
+    <article class="story-card">
+      <div class="badge">✖<span class="num">44,872</span></div>
+      <div class="body">
+        <div class="kicker">Scandal</div>
+        <h4>Cake Cut At Improper Angle; Etiquette Columnist "Resting"</h4>
+        <p>The breach occurred at 10:47 PM. A second slice has since stabilized the situation.</p>
+        <div class="byline">By The Dessert Desk</div>
+      </div>
+    </article>
+  </section>
+
+  <aside class="sidebar">
+    <div class="sidebar-cta">
+      <h4>Got A Scoop? File It Now.</h4>
+      <p>The party's whole point is the headlines you write. Don't let anyone else get the byline on a story you saw first.</p>
+      <button id="sidebar-submit-btn">Submit Your Headline</button>
+    </div>
+
+    <div class="trending">
+      <h3>Trending Now</h3>
+      <div class="sub">Sample Headlines</div>
+
+      <div class="trending-item">
+        <div class="thumb">"<span class="views">29,118</span></div>
+        <div>
+          <h5>"I'm Not Drunk, I'm Just Very Into This Song" — Anonymous</h5>
+          <div class="byline">By The Couch Bureau</div>
+        </div>
+      </div>
+      <div class="trending-item">
+        <div class="thumb">☂<span class="views">14,602</span></div>
+        <div>
+          <h5>Forecast: Lightly Sweating With A Chance Of Karaoke After 11 PM</h5>
+          <div class="byline">By Atmospheric Desk</div>
+        </div>
+      </div>
+      <div class="trending-item">
+        <div class="thumb">★<span class="views">71,250</span></div>
+        <div>
+          <h5>Guest Of Honor Spotted In Three Different Outfits Before 10 PM</h5>
+          <div class="byline">By Front-Door Bureau</div>
+        </div>
+      </div>
+      <div class="trending-item">
+        <div class="thumb">⚡<span class="views">19,887</span></div>
+        <div>
+          <h5>Power Outage Lasts Six Seconds; Group Chat Generates 400 Theories</h5>
+          <div class="byline">By Tech Desk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer>The Page 6 Party · <span class="yellow">May 25</span> · All The News That Fits, We Print <a href="#admin" class="admin-link">·&nbsp;Admin</a></footer>
+
+<!-- Floating submit toggle -->
+<button class="submit-toggle" id="submit-toggle" aria-label="Submit a headline">
+  <span class="plus">+</span> Submit Your Headline
+</button>
+
+<!-- Floating submit popup -->
+<aside class="submit-popup" id="submit-popup" role="dialog" aria-labelledby="popup-title">
+  <div class="popup-header">
+    <h3 id="popup-title">File a Tip</h3>
+    <button class="close" id="popup-close" aria-label="Close">×</button>
+  </div>
+  <div class="popup-body" id="popup-body">
+    <p class="intro">A scoop is a terrible thing to waste. Submissions stay private until the party.</p>
+    <form id="headline-form" autocomplete="off">
+      <label for="kicker">Section</label>
+      <input type="text" id="kicker" placeholder="e.g. Gossip, Style, Scandal" maxlength="40" />
+
+      <label for="headline">Headline*</label>
+      <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
+
+      <label for="summary">Summary (optional)</label>
+      <textarea id="summary" placeholder="A sentence or two of context…" maxlength="280"></textarea>
+
+      <label for="byline">Your Byline*</label>
+      <input type="text" id="byline" placeholder="By Jane Doe" maxlength="60" required />
+
+      <button type="submit" class="send">Send To Press</button>
+    </form>
+  </div>
+</aside>
+
+<!-- Admin overlay (visible when URL hash is #admin) -->
+<div class="admin-overlay" id="admin-overlay" aria-hidden="true">
+  <div class="admin-wrap">
+    <header class="admin-header">
+      <h2>Page 6 · Admin</h2>
+      <button class="admin-close" id="admin-close" aria-label="Close">×</button>
+    </header>
+
+    <div id="admin-login" class="admin-section">
+      <p>Enter the admin password to see all submitted tips.</p>
+      <form id="admin-login-form">
+        <label for="admin-password">Password</label>
+        <input type="password" id="admin-password" placeholder="••••••••" required autocomplete="current-password" />
+        <button type="submit" class="admin-btn">Sign In</button>
+      </form>
+      <p class="admin-note" id="admin-login-msg"></p>
+    </div>
+
+    <div id="admin-view" class="admin-section" hidden>
+      <div class="admin-toolbar">
+        <span id="admin-user-label"></span>
+        <button class="admin-btn-sm" id="admin-refresh">Refresh</button>
+        <button class="admin-btn-sm" id="admin-export">Export CSV</button>
+        <button class="admin-btn-sm" id="admin-signout">Sign Out</button>
+      </div>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="admin-table">
+          <thead><tr><th>When</th><th>Section</th><th>Headline</th><th>Summary</th><th>Byline</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // -----------------------------------------------------------------
+  // Backend lives in server.js (Express + Render Postgres).
+  // The frontend just talks to relative URLs on the same host.
+  // -----------------------------------------------------------------
+  const API_BASE = '';   // same origin
+  const ADMIN_TOKEN_KEY = 'page6.adminToken';
+
+  const form = document.getElementById('headline-form');
+  const popup = document.getElementById('submit-popup');
+  const popupBody = document.getElementById('popup-body');
+  const toggle = document.getElementById('submit-toggle');
+  const closeBtn = document.getElementById('popup-close');
+  const STORAGE_KEY = 'partyTimes.tips.v1';
+
+  // All the buttons that should open the submission popup
+  const openers = [
+    document.getElementById('submit-toggle'),
+    document.getElementById('submit-toggle-top'),
+    document.getElementById('hero-submit-btn'),
+    document.getElementById('sidebar-submit-btn')
+  ];
+
+  function openPopup() {
+    popup.classList.add('open');
+    toggle.style.display = 'none';
+    // reset to form view in case it was thanked
+    restoreForm();
+    setTimeout(() => document.getElementById('headline').focus(), 50);
+  }
+  function closePopup() {
+    popup.classList.remove('open');
+    toggle.style.display = '';
+  }
+
+  openers.forEach(b => b && b.addEventListener('click', openPopup));
+  closeBtn.addEventListener('click', closePopup);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && popup.classList.contains('open')) closePopup();
+  });
+
+  // Save submission silently — does NOT appear on the page.
+  // The host can retrieve these later from localStorage,
+  // or by typing showTips() in the browser console.
+  function saveTip(item) {
+    let arr = [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) arr = JSON.parse(raw);
+    } catch (e) {}
+    arr.push(item);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  // POST the tip to the Express backend. Returns true on success.
+  async function sendTipToBackend(item) {
+    try {
+      const res = await fetch(API_BASE + '/api/tips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          section: item.kicker || null,
+          headline: item.headline,
+          summary: item.summary || null,
+          byline: item.byline
+        })
+      });
+      if (!res.ok) console.warn('Tip submit failed:', res.status);
+      return res.ok;
+    } catch (e) {
+      console.warn('Tip submit error:', e);
+      return false;
+    }
+  }
+
+  function showThanks() {
+    popupBody.innerHTML = `
+      <div class="thanks">
+        <div class="stamp">Filed · Off The Record</div>
+        <h4>Thanks for the tip.</h4>
+        <p>Your headline is locked in the vault until the party on <strong>May 25</strong>.<br>The juiciest ones get read aloud.</p>
+        <button class="again" id="submit-again">Submit Another</button>
+      </div>
+    `;
+    document.getElementById('submit-again').addEventListener('click', restoreForm);
+    setTimeout(() => {
+      // Auto-close after a few seconds
+      if (popup.classList.contains('open')) {
+        // Keep open so they can submit another — do nothing on auto-close
+      }
+    }, 4000);
+  }
+
+  function restoreForm() {
+    popupBody.innerHTML = `
+      <p class="intro">A scoop is a terrible thing to waste. Submissions stay private until the party.</p>
+      <form id="headline-form" autocomplete="off">
+        <label for="kicker">Section</label>
+        <input type="text" id="kicker" placeholder="e.g. Gossip, Style, Scandal" maxlength="40" />
+
+        <label for="headline">Headline*</label>
+        <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
+
+        <label for="summary">Summary (optional)</label>
+        <textarea id="summary" placeholder="A sentence or two of context…" maxlength="280"></textarea>
+
+        <label for="byline">Your Byline <span style="text-transform:none; letter-spacing:0; color:#999;">(optional — leave blank to stay anonymous)</span></label>
+        <input type="text" id="byline" placeholder="By Jane Doe" maxlength="60" />
+
+        <button type="submit" class="send">Send To Press</button>
+      </form>
+    `;
+    bindForm();
+  }
+
+  function bindForm() {
+    const f = document.getElementById('headline-form');
+    if (!f) return;
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const headline = document.getElementById('headline').value.trim();
+      let byline = document.getElementById('byline').value.trim();
+      if (!headline) return;
+      if (!byline) {
+        byline = 'By Anonymous';
+      } else if (!byline.toLowerCase().startsWith('by ')) {
+        byline = 'By ' + byline;
+      }
+      const item = {
+        kicker: document.getElementById('kicker').value.trim(),
+        headline,
+        summary: document.getElementById('summary').value.trim(),
+        byline,
+        ts: Date.now()
+      };
+      saveTip(item);                     // local backup on this device
+      sendTipToBackend(item);            // fire-and-forget to Supabase
+      showThanks();
+    });
+  }
+
+  bindForm();
+
+  // Host-only helper — open the browser console and run showTips()
+  // to see every submission collected on this device.
+  window.showTips = function () {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      console.log('%cPage 6 — Submitted Tips (' + arr.length + ')', 'font-weight:bold; color:#f5d800; background:#000; padding:4px 8px;');
+      console.table(arr.map(t => ({
+        when: new Date(t.ts).toLocaleString(),
+        section: t.kicker,
+        headline: t.headline,
+        summary: t.summary,
+        byline: t.byline
+      })));
+      return arr;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  };
+  console.log('%cPage 6 host: type showTips() to see submissions saved on this device.', 'color:#666');
+
+  // -----------------------------------------------------------------
+  // ADMIN — hash-routed (#admin). Magic-link sign-in via Supabase.
+  // -----------------------------------------------------------------
+  const adminOverlay   = document.getElementById('admin-overlay');
+  const adminLogin     = document.getElementById('admin-login');
+  const adminView      = document.getElementById('admin-view');
+  const adminMsg       = document.getElementById('admin-login-msg');
+  const adminClose     = document.getElementById('admin-close');
+  const adminTableBody = document.querySelector('#admin-table tbody');
+  const adminStats     = document.getElementById('admin-stats');
+  const adminUserLabel = document.getElementById('admin-user-label');
+
+  function adminEscape(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+
+  function isAdminRoute() { return window.location.hash === '#admin'; }
+  function openAdmin() {
+    adminOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    refreshAdminState();
+  }
+  function closeAdmin() {
+    adminOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (window.location.hash === '#admin') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+  adminClose.addEventListener('click', closeAdmin);
+  window.addEventListener('hashchange', () => { if (isAdminRoute()) openAdmin(); });
+
+  function getAdminToken() {
+    try { return sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+  function setAdminToken(t) {
+    try {
+      if (t) sessionStorage.setItem(ADMIN_TOKEN_KEY, t);
+      else sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+    } catch (e) {}
+  }
+
+  async function refreshAdminState() {
+    const token = getAdminToken();
+    if (!token) {
+      adminLogin.hidden = false;
+      adminView.hidden = true;
+      return;
+    }
+    // Validate token by attempting to load tips.
+    adminLogin.hidden = true;
+    adminView.hidden = false;
+    adminUserLabel.textContent = 'Signed in';
+    const ok = await loadTips();
+    if (!ok) {
+      // Token rejected — kick back to login.
+      setAdminToken('');
+      adminLogin.hidden = false;
+      adminView.hidden = true;
+      adminMsg.className = 'admin-note err';
+      adminMsg.textContent = 'Session expired. Sign in again.';
+    }
+  }
+
+  document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('admin-password').value;
+    adminMsg.className = 'admin-note';
+    adminMsg.textContent = 'Signing in…';
+    try {
+      const res = await fetch(API_BASE + '/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      if (!res.ok) {
+        adminMsg.className = 'admin-note err';
+        adminMsg.textContent = res.status === 401 ? 'Wrong password.' : 'Login failed (' + res.status + ').';
+        return;
+      }
+      const data = await res.json();
+      if (data && data.token) {
+        setAdminToken(data.token);
+        document.getElementById('admin-password').value = '';
+        adminMsg.textContent = '';
+        refreshAdminState();
+      } else {
+        adminMsg.className = 'admin-note err';
+        adminMsg.textContent = 'Login failed.';
+      }
+    } catch (err) {
+      adminMsg.className = 'admin-note err';
+      adminMsg.textContent = 'Network error: ' + err.message;
+    }
+  });
+
+  let cachedTips = [];
+
+  async function loadTips() {
+    const token = getAdminToken();
+    if (!token) return false;
+    adminStats.textContent = 'Loading…';
+    try {
+      const res = await fetch(API_BASE + '/api/admin/tips', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        if (res.status === 401) return false;
+        adminStats.innerHTML = 'Error: <strong>' + res.status + '</strong>';
+        adminTableBody.innerHTML = '';
+        return true;
+      }
+      const data = await res.json();
+      cachedTips = (data && data.tips ? data.tips : []);
+      renderTipsTable(cachedTips);
+      return true;
+    } catch (e) {
+      adminStats.innerHTML = 'Network error: <strong>' + adminEscape(e.message) + '</strong>';
+      adminTableBody.innerHTML = '';
+      return true;
+    }
+  }
+
+  function renderTipsTable(tips) {
+    const total  = tips.length;
+    const last24 = tips.filter(t => Date.now() - new Date(t.created_at).getTime() < 86400000).length;
+    adminStats.innerHTML = 'Total submissions: <strong>' + total + '</strong> · Last 24h: <strong>' + last24 + '</strong>';
+    adminTableBody.innerHTML = tips.length
+      ? tips.map(t => '<tr>' +
+          '<td>' + adminEscape(new Date(t.created_at).toLocaleString()) + '</td>' +
+          '<td>' + adminEscape(t.section) + '</td>' +
+          '<td>' + adminEscape(t.headline) + '</td>' +
+          '<td>' + adminEscape(t.summary) + '</td>' +
+          '<td>' + adminEscape(t.byline) + '</td>' +
+        '</tr>').join('')
+      : '<tr><td colspan="5" style="text-align:center;padding:32px;color:#999;font-style:italic;">No submissions yet.</td></tr>';
+  }
+
+  document.getElementById('admin-refresh').addEventListener('click', loadTips);
+  document.getElementById('admin-signout').addEventListener('click', () => {
+    setAdminToken('');
+    refreshAdminState();
+  });
+  document.getElementById('admin-export').addEventListener('click', () => {
+    const rows = [['When', 'Section', 'Headline', 'Summary', 'Byline']];
+    cachedTips.forEach(t => rows.push([
+      new Date(t.created_at).toISOString(),
+      t.section || '',
+      t.headline || '',
+      t.summary || '',
+      t.byline || ''
+    ]));
+    const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'page6-tips-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  if (isAdminRoute()) openAdmin();
+</script>
+</body>
+</html>

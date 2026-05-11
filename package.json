@@ -1,0 +1,17 @@
+{
+  "name": "page-six-party",
+  "version": "1.0.0",
+  "description": "Page 6 Party headline submission site",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  }
+}
