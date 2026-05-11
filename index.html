@@ -950,10 +950,6 @@
 <!-- Top black header -->
 <header class="top-header">
   <div class="left">
-    <button class="nav-btn" aria-label="Sections">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      Sections
-    </button>
     <button class="icon-btn" aria-label="Search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
@@ -969,10 +965,6 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
       Submit a Tip
     </button>
-    <button class="nav-btn" id="header-login-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Log In
-    </button>
   </div>
 </header>
 
@@ -985,8 +977,9 @@
       <div class="eyebrow">Monday, May 25 · Invite Only</div>
       <h1>You Are<br>The <span class="accent">Headline.</span></h1>
       <p class="deck">
-        Welcome to the <strong>Page 6 Party</strong>. This year, the gossip writes itself — because <strong>you write it.</strong>
-        Submit your hottest, most scandalous, completely-fabricated-or-not-at-all headlines.
+        Welcome to the <strong>Page 6 Party</strong>. This year, <strong>you are the news.</strong>
+        Submit your headlines from the year — gossip, favorite memories, funny moments,
+        standout stories, mishaps, glow-ups, wins, losses, and absolute nonsense all welcome.
         The best ones will be read aloud, printed, and immortalized at the party.
       </p>
       <div class="cta-row">
@@ -1001,7 +994,7 @@
       <h3>How It Works</h3>
       <ol>
         <li>Hit the yellow <strong>Submit</strong> button — top right or bottom of the page.</li>
-        <li>Write a headline. The juicier, sillier, or more dramatic, the better.</li>
+        <li>Write a headline. A favorite memory, a funny moment, a piece of gossip, a year-defining story — anything from your year goes.</li>
         <li>Add your byline so we know who broke the story — or stay anonymous if you want.</li>
         <li>Send to press. The best headlines get the spotlight on <strong>May 25</strong>.</li>
       </ol>
@@ -1015,12 +1008,12 @@
 
 <!-- Label strip -->
 <div class="label-strip">
+  <span>Memories</span><span class="dot">✦</span>
   <span>Gossip</span><span class="dot">✦</span>
-  <span>Sighted</span><span class="dot">✦</span>
-  <span>Scandal</span><span class="dot">✦</span>
-  <span>Style</span><span class="dot">✦</span>
+  <span>Moments</span><span class="dot">✦</span>
+  <span>Standouts</span><span class="dot">✦</span>
   <span>Overheard</span><span class="dot">✦</span>
-  <span>Power Couples</span><span class="dot">✦</span>
+  <span>Year In Review</span><span class="dot">✦</span>
   <span>Exclusives</span>
 </div>
 
@@ -1089,8 +1082,8 @@
 
   <aside class="sidebar">
     <div class="sidebar-cta">
-      <h4>Got A Scoop? File It Now.</h4>
-      <p>The party's whole point is the headlines you write. Don't let anyone else get the byline on a story you saw first.</p>
+      <h4>Got A Headline? File It Now.</h4>
+      <p>A memory, a moment, a piece of gossip, the time something ridiculous happened — anything from your year deserves the front page.</p>
       <button id="sidebar-submit-btn">Submit Your Headline</button>
     </div>
 
@@ -1144,10 +1137,10 @@
     <button class="close" id="popup-close" aria-label="Close">×</button>
   </div>
   <div class="popup-body" id="popup-body">
-    <p class="intro">A scoop is a terrible thing to waste. Submissions stay private until the party.</p>
+    <p class="intro">Memory, moment, gossip, mishap — anything from your year is fair game. Submissions stay private until the party.</p>
     <form id="headline-form" autocomplete="off">
       <label for="kicker">Section</label>
-      <input type="text" id="kicker" placeholder="e.g. Gossip, Style, Scandal" maxlength="40" />
+      <input type="text" id="kicker" placeholder="e.g. Memory, Moment, Gossip, Year In Review" maxlength="40" />
 
       <label for="headline">Headline*</label>
       <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
@@ -1294,10 +1287,10 @@
 
   function restoreForm() {
     popupBody.innerHTML = `
-      <p class="intro">A scoop is a terrible thing to waste. Submissions stay private until the party.</p>
+      <p class="intro">Memory, moment, gossip, mishap — anything from your year is fair game. Submissions stay private until the party.</p>
       <form id="headline-form" autocomplete="off">
         <label for="kicker">Section</label>
-        <input type="text" id="kicker" placeholder="e.g. Gossip, Style, Scandal" maxlength="40" />
+        <input type="text" id="kicker" placeholder="e.g. Memory, Moment, Gossip, Year In Review" maxlength="40" />
 
         <label for="headline">Headline*</label>
         <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
