@@ -33,6 +33,8 @@ async function initDb() {
       byline TEXT
     )
   `);
+  // Idempotent migration: add photo_data column for image submissions
+  await pool.query(`ALTER TABLE tips ADD COLUMN IF NOT EXISTS photo_data TEXT`);
   console.log('[db] ready');
 }
 
@@ -43,22 +45,30 @@ function trimOrNull(s, max) {
 }
 
 const app = express();
-app.use(express.json({ limit: '20kb' }));
+app.use(express.json({ limit: '6mb' }));   // headlines are tiny; photos can push body size
 app.use(express.static(__dirname));
 
 // --- Public submission endpoint --------------------------------------------
 app.post('/api/tips', async (req, res) => {
   try {
-    const { section, headline, summary, byline } = req.body || {};
+    const { section, headline, summary, byline, photo_data } = req.body || {};
     const cleanHeadline = trimOrNull(headline, 280);
     if (!cleanHeadline) return res.status(400).json({ error: 'headline required' });
+
+    // Photo: only accept data URLs that look like an image (and bound the length).
+    let photo = null;
+    if (typeof photo_data === 'string' && photo_data.startsWith('data:image/')) {
+      photo = photo_data.length > 5 * 1024 * 1024 ? null : photo_data;
+    }
+
     await pool.query(
-      'INSERT INTO tips (section, headline, summary, byline) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO tips (section, headline, summary, byline, photo_data) VALUES ($1, $2, $3, $4, $5)',
       [
         trimOrNull(section, 60),
         cleanHeadline,
         trimOrNull(summary, 600),
-        trimOrNull(byline, 100) || 'By Anonymous'
+        trimOrNull(byline, 100) || 'By Anonymous',
+        photo
       ]
     );
     res.json({ ok: true });
@@ -114,7 +124,7 @@ app.delete('/api/admin/tips/:id', async (req, res) => {
 app.get('/api/live/tips', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      'SELECT id, created_at, section, headline, summary, byline FROM tips ORDER BY id DESC LIMIT 200'
+      'SELECT id, created_at, section, headline, summary, byline, photo_data FROM tips ORDER BY id DESC LIMIT 200'
     );
     res.json({ tips: rows });
   } catch (e) {

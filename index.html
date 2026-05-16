@@ -1024,17 +1024,17 @@
   /* Feed (post-login) */
   .live-feed { width: 100%; height: 100vh; position: relative; }
 
-  /* Top banner: show name + breaking badge + controls */
+  /* Top banner: show name + controls */
   .live-topbar {
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 68px;
+    height: 112px;
     background: #000;
-    border-bottom: 4px solid var(--yellow);
+    border-bottom: 6px solid var(--yellow);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 36px;
     z-index: 9;
     gap: 16px;
   }
@@ -1047,9 +1047,9 @@
   }
   .show-name {
     font-family: 'Bevan', serif;
-    font-size: clamp(18px, 2.2vw, 30px);
+    font-size: clamp(30px, 4.2vw, 64px);
     color: #fff;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1154,10 +1154,10 @@
   /* Active stage */
   .live-stage {
     position: absolute;
-    inset: 68px 0 64px 0;    /* below topbar, above ticker */
+    inset: 112px 0 64px 0;    /* below topbar, above ticker */
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 40px 60px 60px;
+    padding: 36px 60px 60px;
     text-align: center;
     background: #000;
     overflow: hidden;
@@ -1467,16 +1467,16 @@
   }
 
   @media (max-width: 700px) {
-    .live-topbar { height: 56px; padding: 0 14px; }
-    .show-name { font-size: clamp(15px, 4.4vw, 22px); }
+    .live-topbar { height: 78px; padding: 0 16px; }
+    .show-name { font-size: clamp(22px, 6.5vw, 34px); }
     .live-badge { display: none; }                /* save room on phones */
     .live-exit, .live-fullscreen { padding: 6px 8px; font-size: 10px; letter-spacing: 1px; }
     .live-fullscreen svg { width: 12px; height: 12px; }
     .live-fullscreen span { display: none; }      /* icon-only fullscreen on phones */
-    .live-stage { inset: 56px 0 56px 0; padding: 24px 20px 36px; }
+    .live-stage { inset: 78px 0 56px 0; padding: 24px 20px 36px; }
     .live-stage .headline { font-size: clamp(38px, 12vw, 80px); }
     .live-stage .kicker { font-size: 11px; letter-spacing: 3px; padding: 6px 12px; }
-    .live-idle { padding: 80px 24px 80px; }
+    .live-idle { padding: 100px 24px 80px; }
     .live-ticker { height: 56px; }
     .ticker-label { padding: 0 14px; font-size: 13px; letter-spacing: 2px; }
     .ticker-content { font-size: 14px; }
@@ -1576,6 +1576,74 @@
   .quick-hint { color: #888; font-size: 13px; line-height: 1.5; }
 
   .quick-error { color: #ff7777; font-size: 14px; margin-top: 8px; min-height: 18px; }
+
+  /* Photo upload in quick mode */
+  .quick-photo-row {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .quick-photo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: #fff;
+    border: 1.5px solid #fff;
+    padding: 11px 20px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+  }
+  .quick-photo-btn:hover { background: var(--yellow); color: #000; border-color: var(--yellow); }
+  .quick-photo-btn svg { width: 18px; height: 18px; }
+  .quick-photo-preview { text-align: center; }
+  .quick-photo-preview img {
+    max-width: 240px;
+    max-height: 200px;
+    border: 3px solid var(--yellow);
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .quick-photo-clear {
+    margin-top: 8px;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: inherit;
+  }
+  .quick-photo-clear:hover { color: #fff; }
+
+  /* Photo display in the live stage */
+  .live-photo-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 22px 0;
+    animation: photo-pop 0.55s 0.2s cubic-bezier(.4,2,.4,.6) both;
+  }
+  .live-photo {
+    max-width: min(46vw, 420px);
+    max-height: 34vh;
+    object-fit: contain;
+    border: 5px solid var(--yellow);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  }
+  @keyframes photo-pop {
+    0%   { transform: scale(0.6) rotate(-4deg); opacity: 0; }
+    60%  { transform: scale(1.05) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); }
+  }
+  @media (max-width: 700px) {
+    .live-photo { max-width: 70vw; max-height: 28vh; }
+  }
 </style>
 </head>
 <body>
@@ -1851,6 +1919,9 @@
     <div class="live-stage" id="live-stage" hidden>
       <div class="live-stage-flash-red" id="live-stage-flash-red"></div>
       <div class="stage-badge"><span class="dot"></span>Breaking News</div>
+      <div class="live-photo-wrap" id="live-photo-wrap" hidden>
+        <img class="live-photo" id="live-photo" alt="" />
+      </div>
       <div class="kicker" id="live-kicker"></div>
       <div class="headline-wrap">
         <div class="headline" id="live-headline"></div>
@@ -1882,6 +1953,19 @@
     <h1>What's the <span class="accent">headline?</span></h1>
     <form id="quick-form" class="quick-form" autocomplete="off">
       <input type="text" id="quick-input" placeholder="Type a headline…" maxlength="140" required />
+
+      <div class="quick-photo-row">
+        <label for="quick-photo" class="quick-photo-btn" id="quick-photo-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span id="quick-photo-label">Add a photo (optional)</span>
+        </label>
+        <input type="file" id="quick-photo" accept="image/*" hidden />
+        <div class="quick-photo-preview" id="quick-photo-preview" hidden>
+          <img id="quick-photo-img" alt="Selected photo" />
+          <button type="button" class="quick-photo-clear" id="quick-photo-clear">Remove photo</button>
+        </div>
+      </div>
+
       <button type="submit">Send To The Big Screen</button>
       <div class="quick-error" id="quick-error"></div>
     </form>
@@ -2280,6 +2364,8 @@
   const liveHeadlineEl = document.getElementById('live-headline');
   const liveSummaryEl  = document.getElementById('live-summary');
   const liveBylineEl   = document.getElementById('live-byline');
+  const livePhotoWrap  = document.getElementById('live-photo-wrap');
+  const livePhotoEl    = document.getElementById('live-photo');
   const tickerContent  = document.getElementById('ticker-content');
 
   const LIVE_ANIMATIONS = [
@@ -2417,13 +2503,14 @@
   // JS only writes the headlines into the element and adjusts duration.
   let lastTickerSig = '';
   function escapeHtml(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}function updateTicker(tips) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function updateTicker(tips) {
     if (!tickerContent) return;
     const latest = (tips || []).slice(0, 5);
     const sig = latest.map(t => t.id + ':' + (t.headline || '')).join('|');
@@ -2492,6 +2579,15 @@
       liveSummaryEl.textContent = tip.summary || '';
       liveSummaryEl.style.display = tip.summary ? '' : 'none';
 
+      // Photo: show if the tip carries one
+      if (tip.photo_data && typeof tip.photo_data === 'string') {
+        livePhotoEl.src = tip.photo_data;
+        livePhotoWrap.hidden = false;
+      } else {
+        livePhotoWrap.hidden = true;
+        livePhotoEl.removeAttribute('src');
+      }
+
       // Byline: hide entirely if it's the default "By Anonymous" or blank
       const rawByline = (tip.byline || '').trim();
       const isAnonymous = !rawByline || rawByline.toLowerCase() === 'by anonymous' || rawByline.toLowerCase() === 'anonymous';
@@ -2515,7 +2611,7 @@
       }
 
       // Force CSS animations on the supporting elements to re-fire each tip
-      const animResetEls = [liveKickerEl, liveSummaryEl, liveBylineEl, liveAccent];
+      const animResetEls = [liveKickerEl, liveSummaryEl, liveBylineEl, liveAccent, livePhotoWrap];
       animResetEls.forEach(el => { if (el) el.style.animation = 'none'; });
       liveFlashRed.classList.remove('fire');
 
@@ -2567,7 +2663,72 @@
   const quickInput   = document.getElementById('quick-input');
   const quickError   = document.getElementById('quick-error');
   const quickExit    = document.getElementById('quick-exit');
+  const quickPhotoInput   = document.getElementById('quick-photo');
+  const quickPhotoBtn     = document.getElementById('quick-photo-btn');
+  const quickPhotoLabel   = document.getElementById('quick-photo-label');
+  const quickPhotoPreview = document.getElementById('quick-photo-preview');
+  const quickPhotoImg     = document.getElementById('quick-photo-img');
+  const quickPhotoClearBtn = document.getElementById('quick-photo-clear');
   const QUICK_BTN_LABEL = 'Send To The Big Screen';
+  let quickPhotoData = null;
+
+  // Downscale + JPEG-compress the selected file so the upload stays small.
+  async function resizeImageToDataUrl(file, maxDim, quality) {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((resolve, reject) => {
+        const i = new Image();
+        i.onload = () => resolve(i);
+        i.onerror = reject;
+        i.src = url;
+      });
+      let { width, height } = img;
+      const scale = Math.min(1, maxDim / Math.max(width, height));
+      width  = Math.max(1, Math.round(width * scale));
+      height = Math.max(1, Math.round(height * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      return canvas.toDataURL('image/jpeg', quality);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  function resetQuickPhoto() {
+    quickPhotoData = null;
+    if (quickPhotoInput) quickPhotoInput.value = '';
+    if (quickPhotoLabel) quickPhotoLabel.textContent = 'Add a photo (optional)';
+    if (quickPhotoBtn) quickPhotoBtn.hidden = false;
+    if (quickPhotoPreview) quickPhotoPreview.hidden = true;
+    if (quickPhotoImg) quickPhotoImg.removeAttribute('src');
+  }
+
+  if (quickPhotoInput) {
+    quickPhotoInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (quickPhotoLabel) quickPhotoLabel.textContent = 'Processing…';
+      try {
+        const dataUrl = await resizeImageToDataUrl(file, 1000, 0.65);
+        quickPhotoData = dataUrl;
+        quickPhotoImg.src = dataUrl;
+        quickPhotoBtn.hidden = true;
+        quickPhotoPreview.hidden = false;
+      } catch (err) {
+        console.error('photo error', err);
+        if (quickPhotoLabel) quickPhotoLabel.textContent = 'Add a photo (optional)';
+        alert('Could not load that image. Try a different one?');
+      }
+    });
+  }
+  if (quickPhotoClearBtn) {
+    quickPhotoClearBtn.addEventListener('click', resetQuickPhoto);
+  }
 
   function isQuickRoute() { return window.location.hash === '#quick'; }
 
@@ -2591,6 +2752,7 @@
     quickInner.hidden = false;
     quickInput.value = '';
     quickError.textContent = '';
+    resetQuickPhoto();
     const btn = quickForm.querySelector('button[type="submit"]');
     if (btn) {
       btn.disabled = false;
@@ -2625,16 +2787,19 @@
     btn.disabled = true;
     quickError.textContent = '';
     try {
+      const body = {
+        headline,
+        section: 'Breaking',
+        byline: 'By Anonymous'
+      };
+      if (quickPhotoData) body.photo_data = quickPhotoData;
       const res = await fetch(API_BASE + '/api/tips', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          headline,
-          section: 'Breaking',
-          byline: 'By Anonymous'
-        })
+        body: JSON.stringify(body)
       });
       if (!res.ok) throw new Error('Server returned ' + res.status);
+      resetQuickPhoto();
       showQuickSuccess();
     } catch (err) {
       quickError.textContent = 'Couldn\'t send. Try again.';
