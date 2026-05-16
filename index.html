@@ -2361,8 +2361,8 @@
   }
 
   // News ticker — start scrolling as soon as we have one headline.
-  // Repeats whatever we've got (1..5) enough times to fill the viewport,
-  // then duplicates the row once more for a seamless loop.
+  // Always renders enough copies to span any viewport, then duplicates the row
+  // for a seamless loop. Speed scales with content width.
   let lastTickerSig = '';
   function updateTicker(tips) {
     if (!tickerContent) return;
@@ -2382,28 +2382,18 @@
       '<span class="ticker-sep">✦</span>'
     ).join('');
 
-    // Step 1: render a single block to measure its width
+    // 8 copies — guaranteed to be wider than any practical screen even with 1 short headline.
+    const oneRow = block.repeat(8);
+
+    // Stop the current animation, swap the content, force a layout pass,
+    // then restart with a duration that gives a consistent scroll speed.
     tickerContent.style.animation = 'none';
-    tickerContent.innerHTML = block;
+    tickerContent.innerHTML = oneRow + oneRow;
+    void tickerContent.offsetWidth;            // sync reflow → scrollWidth is now accurate
 
-    requestAnimationFrame(() => {
-      const trackWidth = (tickerContent.parentElement && tickerContent.parentElement.clientWidth) || 800;
-      const tileWidth  = tickerContent.scrollWidth || trackWidth;
-
-      // Repeat block enough so one "row" is at least as wide as the visible track.
-      const copies  = Math.max(1, Math.ceil((trackWidth + 50) / tileWidth));
-      const oneRow  = block.repeat(copies);
-
-      // Two identical rows so translateX(-50%) lines up perfectly for a seamless loop.
-      tickerContent.innerHTML = oneRow + oneRow;
-
-      const rowWidth = tickerContent.scrollWidth / 2;
-      const seconds  = Math.max(12, rowWidth / 90);   // ~90 px/sec target speed
-
-      // Restart the CSS animation cleanly with the new duration.
-      tickerContent.style.animation = '';
-      tickerContent.style.animationDuration = seconds + 's';
-    });
+    const rowWidth = tickerContent.scrollWidth / 2;
+    const seconds  = Math.max(12, rowWidth / 110);   // ~110 px/sec
+    tickerContent.style.animation = 'ticker-scroll ' + seconds + 's linear infinite';
   }
 
   function showLiveIdle() {
