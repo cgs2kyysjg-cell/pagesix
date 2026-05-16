@@ -967,6 +967,89 @@
   }
   .admin-delete:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* Destructive button variant for "Delete All" */
+  .admin-btn-danger {
+    background: #b8000d;
+    color: #fff;
+    border-color: #b8000d;
+  }
+  .admin-btn-danger:hover { background: #fff; color: #b8000d; border-color: #b8000d; }
+
+  /* ---- Mobile admin: turn table rows into tappable cards ---- */
+  @media (max-width: 700px) {
+    .admin-overlay { padding: 0; }
+    .admin-wrap { padding: 0 12px 40px; max-width: 100%; }
+    .admin-header { padding: 12px 14px; margin: 0 -12px 16px; }
+    .admin-header h2 { font-size: 22px; }
+    .admin-section { padding: 14px 12px; }
+    .admin-toolbar { gap: 6px; padding-bottom: 12px; margin-bottom: 14px; }
+    .admin-toolbar #admin-user-label {
+      width: 100%; order: -1; margin: 0 0 6px 0; font-size: 11px;
+    }
+    .admin-btn-sm { padding: 8px 10px; font-size: 11px; letter-spacing: 1px; }
+    .admin-stats { font-size: 12px; }
+
+    /* Card layout */
+    .admin-table-wrap { overflow-x: visible; }
+    .admin-table,
+    .admin-table thead,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td { display: block; width: 100%; }
+    .admin-table thead { display: none; }
+    .admin-table tr {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--yellow);
+      padding: 14px 56px 14px 14px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .admin-table td {
+      padding: 2px 0;
+      border: none !important;
+      white-space: normal !important;
+      min-width: 0 !important;
+    }
+    .admin-table tr:hover td { background: transparent; }
+
+    /* Each cell restyled for the card */
+    .admin-table td:nth-child(1) {       /* When */
+      font-size: 11px; color: var(--muted); letter-spacing: 1px;
+      font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    }
+    .admin-table td:nth-child(2) {       /* Section */
+      font-size: 10px; letter-spacing: 1.5px; padding-top: 2px;
+    }
+    .admin-table td:nth-child(2):empty { display: none; }
+    .admin-table td:nth-child(3) {       /* Headline */
+      font-size: 16px; font-weight: 800; line-height: 1.25;
+      margin: 6px 0 4px 0; color: var(--ink);
+    }
+    .admin-table td:nth-child(4) {       /* Summary */
+      font-size: 13px; color: #444; line-height: 1.4;
+    }
+    .admin-table td:nth-child(4):empty { display: none; }
+    .admin-table td:nth-child(5) {       /* Byline */
+      font-size: 11px; color: var(--muted); margin-top: 4px;
+    }
+    .admin-table td:nth-child(5):empty { display: none; }
+    .admin-table td:nth-child(6) {       /* Delete cell */
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: auto;
+      padding: 0;
+    }
+    .admin-delete {
+      width: 44px;
+      height: 44px;
+      font-size: 24px;
+      border-color: #b8000d;
+      color: #b8000d;
+    }
+  }
+
   /* ---------- LIVE VIEW (breaking-news projector) ---------- */
   .live-overlay {
     display: none;
@@ -1931,6 +2014,7 @@
         <button class="admin-btn-sm" id="admin-refresh">Refresh</button>
         <button class="admin-btn-sm" id="admin-live">Open Live View</button>
         <button class="admin-btn-sm" id="admin-export">Export CSV</button>
+        <button class="admin-btn-sm admin-btn-danger" id="admin-delete-all">Delete All</button>
         <button class="admin-btn-sm" id="admin-signout">Sign Out</button>
       </div>
       <div class="admin-stats" id="admin-stats"></div>
@@ -2332,15 +2416,12 @@
       : '<tr><td colspan="6" style="text-align:center;padding:32px;color:#999;font-style:italic;">No submissions yet.</td></tr>';
   }
 
-  // Delete a tip when the × button is clicked.
+  // Delete a tip when the × button is clicked — no confirmation, instant delete.
   adminTableBody.addEventListener('click', async (e) => {
     const btn = e.target.closest('.admin-delete');
     if (!btn) return;
     const id = btn.getAttribute('data-id');
     if (!id) return;
-    const tip = cachedTips.find(t => String(t.id) === id);
-    const label = tip ? '"' + (tip.headline || '').slice(0, 60) + '"' : 'this tip';
-    if (!confirm('Delete ' + label + '? This can\'t be undone.')) return;
     const token = getAdminToken();
     if (!token) return;
     btn.disabled = true;
@@ -2365,6 +2446,38 @@
       alert('Network error: ' + err.message);
     }
   });
+
+  // Delete ALL tips — single confirm because this is destructive.
+  const adminDeleteAllBtn = document.getElementById('admin-delete-all');
+  if (adminDeleteAllBtn) {
+    adminDeleteAllBtn.addEventListener('click', async () => {
+      const n = cachedTips.length;
+      if (!n) { alert('No headlines to delete.'); return; }
+      if (!confirm('Delete ALL ' + n + ' headlines? This cannot be undone.')) return;
+      const token = getAdminToken();
+      if (!token) return;
+      adminDeleteAllBtn.disabled = true;
+      const oldLabel = adminDeleteAllBtn.textContent;
+      adminDeleteAllBtn.textContent = 'Deleting…';
+      try {
+        const res = await fetch(API_BASE + '/api/admin/tips', {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          alert('Delete-all failed (' + res.status + ').');
+          return;
+        }
+        cachedTips = [];
+        renderTipsTable(cachedTips);
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      } finally {
+        adminDeleteAllBtn.disabled = false;
+        adminDeleteAllBtn.textContent = oldLabel;
+      }
+    });
+  }
 
   document.getElementById('admin-refresh').addEventListener('click', loadTips);
   document.getElementById('admin-signout').addEventListener('click', () => {
