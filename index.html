@@ -1257,6 +1257,134 @@
     .live-badge { top: 16px; padding: 8px 18px; font-size: 12px; letter-spacing: 4px; }
     .live-exit { top: 16px; right: 16px; }
   }
+
+  /* ---------- QUICK MODE (kiosk: one field, fast submission) ---------- */
+  .quick-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    color: #fff;
+    z-index: 150;
+    padding: 24px;
+    overflow-y: auto;
+  }
+  .quick-overlay.open { display: flex; flex-direction: column; }
+  .quick-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .quick-mast {
+    font-family: 'Bevan', serif;
+    font-size: 18px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+  .quick-exit {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  .quick-exit:hover { opacity: 1; background: #fff; color: #000; }
+  .quick-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .quick-inner h1 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(44px, 12vw, 84px);
+    line-height: 0.95;
+    margin-bottom: 36px;
+    text-transform: uppercase;
+  }
+  .quick-inner h1 .accent { color: var(--yellow); }
+  .quick-form { width: 100%; }
+  .quick-form input[type="text"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid #fff;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: clamp(20px, 5vw, 28px);
+    padding: 16px 8px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 24px;
+  }
+  .quick-form input[type="text"]::placeholder { color: #666; }
+  .quick-form input[type="text"]:focus { border-color: var(--yellow); }
+  .quick-form button[type="submit"] {
+    width: 100%;
+    background: var(--yellow);
+    color: #000;
+    border: none;
+    padding: 18px 24px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  .quick-form button[type="submit"]:hover { background: #fff; }
+  .quick-form button[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .quick-hint { color: #888; font-size: 13px; line-height: 1.5; }
+
+  .quick-success {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .quick-success .success-badge {
+    background: var(--yellow);
+    color: #000;
+    padding: 20px 36px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 5vw, 32px);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    animation: success-pop 0.4s cubic-bezier(.4, 2, .5, .6);
+    border: 3px solid #000;
+    box-shadow: 0 0 0 3px var(--yellow);
+  }
+  @keyframes success-pop {
+    0% { transform: scale(0.4) rotate(-4deg); opacity: 0; }
+    60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .quick-success h2 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 6vw, 44px);
+    margin-bottom: 12px;
+  }
+  .quick-success p { color: #aaa; font-size: 16px; line-height: 1.4; }
+  .quick-error { color: #ff7777; font-size: 14px; margin-top: 8px; min-height: 18px; }
 </style>
 </head>
 <body>
@@ -1527,6 +1655,30 @@
     </div>
 
     <div class="live-flash" id="live-flash"></div>
+  </div>
+</div>
+
+<!-- Quick mode (one-field submission, visible at #quick) -->
+<div class="quick-overlay" id="quick-overlay" aria-hidden="true">
+  <div class="quick-top">
+    <div class="quick-mast">Page Six: The Party</div>
+    <button class="quick-exit" id="quick-exit" type="button">Exit</button>
+  </div>
+
+  <div class="quick-inner" id="quick-inner">
+    <h1>What's the <span class="accent">headline?</span></h1>
+    <form id="quick-form" class="quick-form" autocomplete="off">
+      <input type="text" id="quick-input" placeholder="Type a headline…" maxlength="140" required />
+      <button type="submit">Send To The Big Screen</button>
+      <div class="quick-error" id="quick-error"></div>
+    </form>
+    <p class="quick-hint">Tap send and it pops up on the screen at the party.<br>No name needed — submissions are anonymous.</p>
+  </div>
+
+  <div class="quick-success" id="quick-success" hidden>
+    <div class="success-badge">✓ Sent</div>
+    <h2>It's on the screen.</h2>
+    <p>Submit another, or pass the phone to a friend.</p>
   </div>
 </div>
 
@@ -2045,6 +2197,87 @@
 
   if (isAdminRoute()) openAdmin();
   if (isLiveRoute()) openLive();
+
+  // -----------------------------------------------------------------
+  // QUICK MODE — one-field submission at #quick.
+  // Posts to /api/tips like the regular form, so headlines still land
+  // in the admin table AND show up on the live feed.
+  // -----------------------------------------------------------------
+  const quickOverlay = document.getElementById('quick-overlay');
+  const quickInner   = document.getElementById('quick-inner');
+  const quickSuccess = document.getElementById('quick-success');
+  const quickForm    = document.getElementById('quick-form');
+  const quickInput   = document.getElementById('quick-input');
+  const quickError   = document.getElementById('quick-error');
+  const quickExit    = document.getElementById('quick-exit');
+
+  function isQuickRoute() { return window.location.hash === '#quick'; }
+
+  function openQuick() {
+    // If another overlay is open, close it first
+    if (adminOverlay.classList.contains('open')) closeAdmin();
+    if (liveOverlay.classList.contains('open')) closeLive();
+    quickOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    showQuickForm();
+    setTimeout(() => quickInput.focus(), 80);
+  }
+  function closeQuick() {
+    quickOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (window.location.hash === '#quick') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+  function showQuickForm() {
+    quickInner.hidden = false;
+    quickSuccess.hidden = true;
+    quickInput.value = '';
+    quickError.textContent = '';
+    const btn = quickForm.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = false;
+  }
+  function showQuickSuccess() {
+    quickInner.hidden = true;
+    quickSuccess.hidden = false;
+    // Auto-reset after a few seconds so the next person can submit fast
+    setTimeout(() => {
+      if (quickOverlay.classList.contains('open')) {
+        showQuickForm();
+        setTimeout(() => quickInput.focus(), 50);
+      }
+    }, 2200);
+  }
+
+  quickExit.addEventListener('click', closeQuick);
+  window.addEventListener('hashchange', () => { if (isQuickRoute()) openQuick(); });
+
+  quickForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const headline = quickInput.value.trim();
+    if (!headline) return;
+    const btn = quickForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    quickError.textContent = '';
+    try {
+      const res = await fetch(API_BASE + '/api/tips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          headline,
+          section: 'Breaking',
+          byline: 'By Anonymous'
+        })
+      });
+      if (!res.ok) throw new Error('Server returned ' + res.status);
+      showQuickSuccess();
+    } catch (err) {
+      quickError.textContent = 'Couldn\'t send. Try again.';
+      btn.disabled = false;
+    }
+  });
+
+  if (isQuickRoute()) openQuick();
 </script>
 </body>
 </html>
