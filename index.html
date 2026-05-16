@@ -1644,6 +1644,52 @@
     60%  { transform: scale(1.05) rotate(2deg); opacity: 1; }
     100% { transform: scale(1) rotate(0); }
   }
+
+  /* Default (no photo): text stacks centered as before */
+  .live-stage .stage-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 95vw;
+  }
+
+  /* Photo present: photo on the LEFT, text stack on the RIGHT */
+  .live-stage.has-photo {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    padding: 28px 60px 40px;
+  }
+  .live-stage.has-photo .live-photo-wrap {
+    margin: 0;
+    flex: 0 1 auto;
+  }
+  .live-stage.has-photo .live-photo {
+    max-width: min(48vw, 720px);
+    max-height: 72vh;
+  }
+  .live-stage.has-photo .stage-text {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 45vw;
+    flex: 1 1 auto;
+  }
+  .live-stage.has-photo .headline-wrap { align-items: flex-start; }
+  .live-stage.has-photo .headline { font-size: clamp(40px, 6.5vw, 110px); }
+  .live-stage.has-photo .summary { max-width: 100%; }
+
+  @media (max-width: 900px) {
+    /* On narrow screens, drop back to vertical even with a photo */
+    .live-stage.has-photo {
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px 24px 32px;
+    }
+    .live-stage.has-photo .live-photo { max-width: 80vw; max-height: 32vh; }
+    .live-stage.has-photo .stage-text { align-items: center; text-align: center; max-width: 95vw; }
+    .live-stage.has-photo .headline-wrap { align-items: center; }
+  }
   @media (max-width: 700px) {
     .live-photo { max-width: 70vw; max-height: 28vh; }
   }
@@ -1921,17 +1967,19 @@
 
     <div class="live-stage" id="live-stage" hidden>
       <div class="live-stage-flash-red" id="live-stage-flash-red"></div>
-      <div class="stage-badge"><span class="dot"></span>Breaking News</div>
       <div class="live-photo-wrap" id="live-photo-wrap" hidden>
         <img class="live-photo" id="live-photo" alt="" />
       </div>
-      <div class="kicker" id="live-kicker"></div>
-      <div class="headline-wrap">
-        <div class="headline" id="live-headline"></div>
-        <div class="headline-accent" id="live-headline-accent"></div>
+      <div class="stage-text">
+        <div class="stage-badge"><span class="dot"></span>Breaking News</div>
+        <div class="kicker" id="live-kicker"></div>
+        <div class="headline-wrap">
+          <div class="headline" id="live-headline"></div>
+          <div class="headline-accent" id="live-headline-accent"></div>
+        </div>
+        <div class="summary" id="live-summary"></div>
+        <div class="byline" id="live-byline"></div>
       </div>
-      <div class="summary" id="live-summary"></div>
-      <div class="byline" id="live-byline"></div>
     </div>
 
     <div class="live-flash" id="live-flash"></div>
@@ -2582,13 +2630,16 @@
       liveSummaryEl.textContent = tip.summary || '';
       liveSummaryEl.style.display = tip.summary ? '' : 'none';
 
-      // Photo: show if the tip carries one
+      // Photo: show if the tip carries one. With a photo, switch the stage
+      // to a horizontal layout (photo left / text right).
       if (tip.photo_data && typeof tip.photo_data === 'string') {
         livePhotoEl.src = tip.photo_data;
         livePhotoWrap.hidden = false;
+        liveStage.classList.add('has-photo');
       } else {
         livePhotoWrap.hidden = true;
         livePhotoEl.removeAttribute('src');
+        liveStage.classList.remove('has-photo');
       }
 
       // Byline: hide entirely if it's the default "By Anonymous" or blank
