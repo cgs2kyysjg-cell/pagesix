@@ -1509,19 +1509,8 @@
 
 <!-- Live view overlay (visible when URL hash is #live) -->
 <div class="live-overlay" id="live-overlay" aria-hidden="true">
-  <!-- Login -->
-  <div class="live-login" id="live-login">
-    <h2>Live Feed</h2>
-    <p>Enter the password to start the breaking-news projection.</p>
-    <form id="live-login-form" autocomplete="off">
-      <input type="password" id="live-password" placeholder="Password" autocomplete="current-password" />
-      <button type="submit">Start Feed</button>
-    </form>
-    <div class="live-login-msg" id="live-login-msg"></div>
-  </div>
-
   <!-- Feed -->
-  <div class="live-feed" id="live-feed" hidden>
+  <div class="live-feed" id="live-feed">
     <div class="live-badge">Breaking News</div>
     <button class="live-exit" id="live-exit" type="button">Exit</button>
 
@@ -1885,12 +1874,10 @@
   // LIVE VIEW — full-screen breaking-news projector at #live.
   // -----------------------------------------------------------------
   const liveOverlay    = document.getElementById('live-overlay');
-  const liveLogin      = document.getElementById('live-login');
   const liveFeed       = document.getElementById('live-feed');
   const liveIdle       = document.getElementById('live-idle');
   const liveStage      = document.getElementById('live-stage');
   const liveFlash      = document.getElementById('live-flash');
-  const liveLoginMsg   = document.getElementById('live-login-msg');
   const liveExitBtn    = document.getElementById('live-exit');
   const liveKickerEl   = document.getElementById('live-kicker');
   const liveHeadlineEl = document.getElementById('live-headline');
@@ -1945,55 +1932,14 @@
   });
 
   async function refreshLiveState() {
-    const token = getAdminToken();
-    if (!token) {
-      liveLogin.hidden = false;
-      liveFeed.hidden = true;
-      return;
-    }
-    liveLogin.hidden = true;
-    liveFeed.hidden = false;
     await initLiveFeed();
   }
 
-  document.getElementById('live-login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const password = document.getElementById('live-password').value;
-    liveLoginMsg.textContent = 'Signing in…';
-    try {
-      const res = await fetch(API_BASE + '/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      if (!res.ok) {
-        liveLoginMsg.textContent = res.status === 401 ? 'Wrong password.' : 'Login failed.';
-        return;
-      }
-      const data = await res.json();
-      if (data && data.token) {
-        setAdminToken(data.token);
-        document.getElementById('live-password').value = '';
-        liveLoginMsg.textContent = '';
-        refreshLiveState();
-      }
-    } catch (err) {
-      liveLoginMsg.textContent = 'Network error: ' + err.message;
-    }
-  });
-
   // First load: mark all existing tips as seen so we only show NEW ones.
   async function initLiveFeed() {
-    const token = getAdminToken();
-    if (!token) return;
     try {
-      const res = await fetch(API_BASE + '/api/admin/tips', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      if (!res.ok) {
-        if (res.status === 401) { setAdminToken(''); refreshLiveState(); }
-        return;
-      }
+      const res = await fetch(API_BASE + '/api/live/tips');
+      if (!res.ok) return;
       const data = await res.json();
       const tips = (data && data.tips) || [];
       liveLastSeenId = tips.length ? Math.max.apply(null, tips.map(t => t.id)) : 0;
@@ -2004,12 +1950,8 @@
   }
 
   async function pollLive() {
-    const token = getAdminToken();
-    if (!token) return;
     try {
-      const res = await fetch(API_BASE + '/api/admin/tips', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
+      const res = await fetch(API_BASE + '/api/live/tips');
       if (!res.ok) return;
       const data = await res.json();
       const fresh = ((data && data.tips) || []).filter(t => t.id > liveLastSeenId);

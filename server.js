@@ -94,6 +94,21 @@ app.get('/api/admin/tips', async (req, res) => {
   }
 });
 
+// --- Public live feed endpoint (no auth) -----------------------------------
+// Used by the #live projector view so the host doesn't need to sign in.
+// Returns the most recent tips so the frontend can detect new ones by id.
+app.get('/api/live/tips', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT id, created_at, section, headline, summary, byline FROM tips ORDER BY id DESC LIMIT 200'
+    );
+    res.json({ tips: rows });
+  } catch (e) {
+    console.error('[live select]', e);
+    res.status(500).json({ error: 'select failed' });
+  }
+});
+
 app.get('/healthz', (req, res) => res.json({ ok: true }));
 
 // --- Boot ------------------------------------------------------------------
