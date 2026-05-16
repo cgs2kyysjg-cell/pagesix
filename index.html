@@ -1001,27 +1001,60 @@
   /* Feed (post-login) */
   .live-feed { width: 100%; height: 100vh; position: relative; }
 
-  .live-badge {
+  /* Top banner: show name + breaking badge + controls */
+  .live-topbar {
     position: absolute;
-    top: 30px; left: 50%;
-    transform: translateX(-50%);
+    top: 0; left: 0; right: 0;
+    height: 68px;
+    background: #000;
+    border-bottom: 4px solid var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 9;
+    gap: 16px;
+  }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    flex: 1;
+  }
+  .show-name {
+    font-family: 'Bevan', serif;
+    font-size: clamp(18px, 2.2vw, 30px);
+    color: #fff;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1;
+  }
+  .show-name .show-accent { color: var(--yellow); }
+
+  .live-badge {
     background: #b8000d;
     color: #fff;
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
-    font-size: clamp(14px, 1.8vw, 22px);
-    letter-spacing: 6px;
-    padding: 10px 28px;
+    font-size: clamp(11px, 1.4vw, 16px);
+    letter-spacing: 4px;
+    padding: 8px 16px;
     z-index: 5;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
   }
   .live-badge::before {
     content: '';
     display: inline-block;
-    width: 10px; height: 10px;
+    width: 9px; height: 9px;
     background: #fff;
     border-radius: 50%;
-    margin-right: 12px;
+    margin-right: 10px;
     vertical-align: middle;
     animation: live-pulse 1s infinite;
   }
@@ -1031,12 +1064,10 @@
   }
 
   .live-controls {
-    position: absolute;
-    top: 30px; right: 30px;
-    z-index: 10;
     display: flex;
     gap: 8px;
     transition: opacity 0.5s;
+    flex-shrink: 0;
   }
   .live-exit,
   .live-fullscreen {
@@ -1070,7 +1101,7 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     text-align: center;
-    padding: 60px 40px;
+    padding: 100px 40px 100px;
   }
   .live-idle h1 {
     font-family: 'Bevan', serif;
@@ -1100,10 +1131,10 @@
   /* Active stage */
   .live-stage {
     position: absolute;
-    inset: 0 0 64px 0;       /* reserve space for ticker */
+    inset: 68px 0 64px 0;    /* below topbar, above ticker */
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 100px 60px 60px;
+    padding: 40px 60px 60px;
     text-align: center;
     background: #000;
     overflow: hidden;
@@ -1387,11 +1418,20 @@
   }
 
   @media (max-width: 700px) {
-    .live-stage { padding: 80px 24px 60px; }
+    .live-topbar { height: 56px; padding: 0 14px; }
+    .show-name { font-size: clamp(15px, 4.4vw, 22px); }
+    .live-badge { display: none; }                /* save room on phones */
+    .live-exit, .live-fullscreen { padding: 6px 8px; font-size: 10px; letter-spacing: 1px; }
+    .live-fullscreen svg { width: 12px; height: 12px; }
+    .live-fullscreen span { display: none; }      /* icon-only fullscreen on phones */
+    .live-stage { inset: 56px 0 56px 0; padding: 24px 20px 36px; }
     .live-stage .headline { font-size: clamp(38px, 12vw, 80px); }
-    .live-stage .kicker { font-size: 13px; letter-spacing: 3px; }
-    .live-badge { top: 16px; padding: 8px 18px; font-size: 12px; letter-spacing: 4px; }
-    .live-exit { top: 16px; right: 16px; }
+    .live-stage .kicker { font-size: 11px; letter-spacing: 3px; padding: 6px 12px; }
+    .live-idle { padding: 80px 24px 80px; }
+    .live-ticker { height: 56px; }
+    .ticker-label { padding: 0 14px; font-size: 13px; letter-spacing: 2px; }
+    .ticker-content { font-size: 14px; }
+    .ticker-item { padding: 0 16px; }
   }
 
   /* ---------- QUICK MODE (kiosk: one field, fast submission) ---------- */
@@ -1775,13 +1815,18 @@
 <div class="live-overlay" id="live-overlay" aria-hidden="true">
   <!-- Feed -->
   <div class="live-feed" id="live-feed">
-    <div class="live-badge">Breaking News</div>
-    <div class="live-controls" id="live-controls">
-      <button class="live-fullscreen" id="live-fullscreen" type="button" aria-label="Toggle fullscreen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-        <span id="live-fullscreen-label">Fullscreen</span>
-      </button>
-      <button class="live-exit" id="live-exit" type="button">Exit</button>
+    <div class="live-topbar">
+      <div class="topbar-left">
+        <div class="show-name">Page <span class="show-accent">Six:</span> The Party</div>
+        <div class="live-badge">Breaking News</div>
+      </div>
+      <div class="live-controls" id="live-controls">
+        <button class="live-fullscreen" id="live-fullscreen" type="button" aria-label="Toggle fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+          <span id="live-fullscreen-label">Fullscreen</span>
+        </button>
+        <button class="live-exit" id="live-exit" type="button">Exit</button>
+      </div>
     </div>
 
     <div class="live-idle" id="live-idle">
@@ -2315,18 +2360,20 @@
     } catch (e) { /* ignore */ }
   }
 
-  // News ticker — show the latest 5 headlines, scrolling continuously.
+  // News ticker — start scrolling as soon as we have one headline.
+  // Repeats whatever we've got (1..5) enough times to fill the viewport,
+  // then duplicates the row once more for a seamless loop.
   let lastTickerSig = '';
   function updateTicker(tips) {
     if (!tickerContent) return;
     const latest = (tips || []).slice(0, 5);
     const sig = latest.map(t => t.id + ':' + (t.headline || '')).join('|');
-    if (sig === lastTickerSig) return;   // nothing changed
+    if (sig === lastTickerSig) return;
     lastTickerSig = sig;
 
     if (!latest.length) {
       tickerContent.innerHTML = '<span class="ticker-empty">Awaiting headlines…</span>';
-      tickerContent.style.animationDuration = '60s';
+      tickerContent.style.animation = 'none';
       return;
     }
 
@@ -2334,13 +2381,27 @@
       '<span class="ticker-item">' + escapeHtml((t.headline || '').toUpperCase()) + '</span>' +
       '<span class="ticker-sep">✦</span>'
     ).join('');
-    // Duplicate the block so the loop seam is invisible.
-    tickerContent.innerHTML = block + block;
 
-    // Pace the scroll based on actual content width so it reads at a consistent speed.
+    // Step 1: render a single block to measure its width
+    tickerContent.style.animation = 'none';
+    tickerContent.innerHTML = block;
+
     requestAnimationFrame(() => {
-      const half = tickerContent.scrollWidth / 2;
-      const seconds = Math.max(20, half / 70); // ~70 px/sec
+      const trackWidth = (tickerContent.parentElement && tickerContent.parentElement.clientWidth) || 800;
+      const tileWidth  = tickerContent.scrollWidth || trackWidth;
+
+      // Repeat block enough so one "row" is at least as wide as the visible track.
+      const copies  = Math.max(1, Math.ceil((trackWidth + 50) / tileWidth));
+      const oneRow  = block.repeat(copies);
+
+      // Two identical rows so translateX(-50%) lines up perfectly for a seamless loop.
+      tickerContent.innerHTML = oneRow + oneRow;
+
+      const rowWidth = tickerContent.scrollWidth / 2;
+      const seconds  = Math.max(12, rowWidth / 90);   // ~90 px/sec target speed
+
+      // Restart the CSS animation cleanly with the new duration.
+      tickerContent.style.animation = '';
       tickerContent.style.animationDuration = seconds + 's';
     });
   }
