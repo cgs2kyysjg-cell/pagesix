@@ -1663,6 +1663,22 @@
 
   .quick-error { color: #ff7777; font-size: 14px; margin-top: 8px; min-height: 18px; }
 
+  /* Live character counter */
+  .char-counter {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    text-align: right;
+  }
+  .char-counter.warn { color: #d27b00; }
+  .char-counter.over { color: #b8000d; font-weight: 700; }
+  /* Quick form: center the counter under the centered input */
+  .quick-form .char-counter { text-align: center; font-size: 13px; margin-bottom: 18px; color: #999; }
+
   /* Photo upload in quick mode */
   .quick-photo-row {
     margin-bottom: 24px;
@@ -1977,7 +1993,8 @@
       <input type="text" id="kicker" placeholder="e.g. Memory, Moment, Gossip, Year In Review" maxlength="40" />
 
       <label for="headline">Headline*</label>
-      <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
+      <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="65" required />
+      <div class="char-counter" id="headline-counter">0 / 65</div>
 
       <label for="summary">Details (optional)</label>
       <textarea id="summary" placeholder="A sentence or two of context…" maxlength="280"></textarea>
@@ -2088,7 +2105,8 @@
   <div class="quick-inner" id="quick-inner">
     <h1>What's the <span class="accent">headline?</span></h1>
     <form id="quick-form" class="quick-form" autocomplete="off">
-      <input type="text" id="quick-input" placeholder="Type a headline…" maxlength="140" required />
+      <input type="text" id="quick-input" placeholder="Type a headline…" maxlength="65" required />
+      <div class="char-counter" id="quick-counter">0 / 65</div>
 
       <div class="quick-photo-row">
         <label for="quick-photo" class="quick-photo-btn" id="quick-photo-btn">
@@ -2211,7 +2229,8 @@
         <input type="text" id="kicker" placeholder="e.g. Memory, Moment, Gossip, Year In Review" maxlength="40" />
 
         <label for="headline">Headline*</label>
-        <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="140" required />
+        <input type="text" id="headline" placeholder="Write a snappy headline…" maxlength="65" required />
+        <div class="char-counter" id="headline-counter">0 / 65</div>
 
         <label for="summary">Details (optional)</label>
         <textarea id="summary" placeholder="A sentence or two of context…" maxlength="280"></textarea>
@@ -2228,6 +2247,21 @@
   function bindForm() {
     const f = document.getElementById('headline-form');
     if (!f) return;
+
+    // Live character counter for the headline field
+    const headlineEl = document.getElementById('headline');
+    const counterEl  = document.getElementById('headline-counter');
+    if (headlineEl && counterEl) {
+      const updateCounter = () => {
+        const n = headlineEl.value.length;
+        counterEl.textContent = n + ' / 65';
+        counterEl.classList.toggle('warn', n >= 55 && n < 65);
+        counterEl.classList.toggle('over', n >= 65);
+      };
+      headlineEl.addEventListener('input', updateCounter);
+      updateCounter();
+    }
+
     f.addEventListener('submit', (e) => {
       e.preventDefault();
       const headline = document.getElementById('headline').value.trim();
@@ -2898,6 +2932,19 @@
     quickPhotoClearBtn.addEventListener('click', resetQuickPhoto);
   }
 
+  // Live character counter for the quick form's headline input
+  const quickCounter = document.getElementById('quick-counter');
+  if (quickInput && quickCounter) {
+    const updateQuickCounter = () => {
+      const n = quickInput.value.length;
+      quickCounter.textContent = n + ' / 65';
+      quickCounter.classList.toggle('warn', n >= 55 && n < 65);
+      quickCounter.classList.toggle('over', n >= 65);
+    };
+    quickInput.addEventListener('input', updateQuickCounter);
+    updateQuickCounter();
+  }
+
   function isQuickRoute() { return window.location.hash === '#quick'; }
 
   function openQuick() {
@@ -2919,6 +2966,7 @@
   function showQuickForm() {
     quickInner.hidden = false;
     quickInput.value = '';
+    quickInput.dispatchEvent(new Event('input'));   // reset character counter
     quickError.textContent = '';
     resetQuickPhoto();
     const btn = quickForm.querySelector('button[type="submit"]');
@@ -2931,6 +2979,7 @@
     // No celebration screen — just reset the form and flash the button briefly
     // so the user knows it submitted, then refocus for the next entry.
     quickInput.value = '';
+    quickInput.dispatchEvent(new Event('input'));   // reset character counter
     quickError.textContent = '';
     const btn = quickForm.querySelector('button[type="submit"]');
     if (btn) {

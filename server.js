@@ -52,7 +52,7 @@ app.use(express.static(__dirname));
 app.post('/api/tips', async (req, res) => {
   try {
     const { section, headline, summary, byline, photo_data } = req.body || {};
-    const cleanHeadline = trimOrNull(headline, 280);
+    const cleanHeadline = trimOrNull(headline, 65);   // enforce 65-char headline limit server-side too
     if (!cleanHeadline) return res.status(400).json({ error: 'headline required' });
 
     // Photo: only accept data URLs that look like an image (and bound the length).
