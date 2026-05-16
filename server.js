@@ -94,6 +94,20 @@ app.get('/api/admin/tips', async (req, res) => {
   }
 });
 
+// Delete a single tip (admin only)
+app.delete('/api/admin/tips/:id', async (req, res) => {
+  if (!checkAdmin(req)) return res.status(401).json({ error: 'unauthorized' });
+  const id = parseInt(req.params.id, 10);
+  if (!Number.isFinite(id)) return res.status(400).json({ error: 'bad id' });
+  try {
+    const result = await pool.query('DELETE FROM tips WHERE id = $1', [id]);
+    res.json({ ok: true, deleted: result.rowCount });
+  } catch (e) {
+    console.error('[delete]', e);
+    res.status(500).json({ error: 'delete failed' });
+  }
+});
+
 // --- Public live feed endpoint (no auth) -----------------------------------
 // Used by the #live projector view so the host doesn't need to sign in.
 // Returns the most recent tips so the frontend can detect new ones by id.

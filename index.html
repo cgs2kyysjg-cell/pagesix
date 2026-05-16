@@ -944,6 +944,29 @@
   .admin-link { color: var(--yellow); text-decoration: none; margin-left: 8px; opacity: 0.6; }
   .admin-link:hover { opacity: 1; text-decoration: underline; }
 
+  .admin-delete {
+    background: transparent;
+    border: 1.5px solid var(--line);
+    color: #999;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    font-family: serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .admin-delete:hover {
+    background: #b8000d;
+    color: #fff;
+    border-color: #b8000d;
+  }
+  .admin-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+
   /* ---------- LIVE VIEW (breaking-news projector) ---------- */
   .live-overlay {
     display: none;
@@ -1158,17 +1181,40 @@
     to   { transform: scaleX(1); }
   }
 
+  .live-stage .stage-badge {
+    background: #b8000d;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(12px, 1.6vw, 20px);
+    letter-spacing: 6px;
+    padding: 9px 20px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 18px;
+    animation: kicker-pop 0.4s 0.05s cubic-bezier(.4,2,.4,.6) both;
+  }
+  .live-stage .stage-badge .dot {
+    width: 9px; height: 9px;
+    background: #fff;
+    border-radius: 50%;
+    margin-right: 10px;
+    animation: live-pulse 1s infinite;
+    display: inline-block;
+  }
   .live-stage .kicker {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
     font-size: clamp(14px, 2vw, 24px);
     letter-spacing: 6px;
-    color: #fff;
+    color: var(--yellow);
     text-transform: uppercase;
     margin-bottom: 24px;
-    background: #b8000d;
-    padding: 10px 22px;
-    animation: kicker-pop 0.45s 0.2s cubic-bezier(.4,2,.4,.6) both;
+    background: rgba(245, 216, 0, 0.12);
+    padding: 8px 18px;
+    border-left: 4px solid var(--yellow);
+    animation: kicker-pop 0.45s 0.25s cubic-bezier(.4,2,.4,.6) both;
   }
   @keyframes kicker-pop {
     0%   { transform: scale(0.6) rotate(-3deg); opacity: 0; }
@@ -1803,7 +1849,7 @@
       <div class="admin-stats" id="admin-stats"></div>
       <div class="admin-table-wrap">
         <table class="admin-table" id="admin-table">
-          <thead><tr><th>When</th><th>Section</th><th>Headline</th><th>Summary</th><th>Byline</th></tr></thead>
+          <thead><tr><th>When</th><th>Section</th><th>Headline</th><th>Summary</th><th>Byline</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -1818,7 +1864,6 @@
     <div class="live-topbar">
       <div class="topbar-left">
         <div class="show-name">Page <span class="show-accent">Six:</span> The Party</div>
-        <div class="live-badge">Breaking News</div>
       </div>
       <div class="live-controls" id="live-controls">
         <button class="live-fullscreen" id="live-fullscreen" type="button" aria-label="Toggle fullscreen">
@@ -1836,6 +1881,7 @@
 
     <div class="live-stage" id="live-stage" hidden>
       <div class="live-stage-flash-red" id="live-stage-flash-red"></div>
+      <div class="stage-badge"><span class="dot"></span>Breaking News</div>
       <div class="kicker" id="live-kicker"></div>
       <div class="headline-wrap">
         <div class="headline" id="live-headline"></div>
@@ -2175,15 +2221,50 @@
     const last24 = tips.filter(t => Date.now() - new Date(t.created_at).getTime() < 86400000).length;
     adminStats.innerHTML = 'Total submissions: <strong>' + total + '</strong> · Last 24h: <strong>' + last24 + '</strong>';
     adminTableBody.innerHTML = tips.length
-      ? tips.map(t => '<tr>' +
+      ? tips.map(t => '<tr data-id="' + t.id + '">' +
           '<td>' + adminEscape(new Date(t.created_at).toLocaleString()) + '</td>' +
           '<td>' + adminEscape(t.section) + '</td>' +
           '<td>' + adminEscape(t.headline) + '</td>' +
           '<td>' + adminEscape(t.summary) + '</td>' +
           '<td>' + adminEscape(t.byline) + '</td>' +
+          '<td><button class="admin-delete" data-id="' + t.id + '" title="Delete">×</button></td>' +
         '</tr>').join('')
-      : '<tr><td colspan="5" style="text-align:center;padding:32px;color:#999;font-style:italic;">No submissions yet.</td></tr>';
+      : '<tr><td colspan="6" style="text-align:center;padding:32px;color:#999;font-style:italic;">No submissions yet.</td></tr>';
   }
+
+  // Delete a tip when the × button is clicked.
+  adminTableBody.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.admin-delete');
+    if (!btn) return;
+    const id = btn.getAttribute('data-id');
+    if (!id) return;
+    const tip = cachedTips.find(t => String(t.id) === id);
+    const label = tip ? '"' + (tip.headline || '').slice(0, 60) + '"' : 'this tip';
+    if (!confirm('Delete ' + label + '? This can\'t be undone.')) return;
+    const token = getAdminToken();
+    if (!token) return;
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const res = await fetch(API_BASE + '/api/admin/tips/' + id, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        btn.disabled = false;
+        btn.textContent = '×';
+        alert('Delete failed (' + res.status + ').');
+        return;
+      }
+      // Remove from cache and refresh table
+      cachedTips = cachedTips.filter(t => String(t.id) !== id);
+      renderTipsTable(cachedTips);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = '×';
+      alert('Network error: ' + err.message);
+    }
+  });
 
   document.getElementById('admin-refresh').addEventListener('click', loadTips);
   document.getElementById('admin-signout').addEventListener('click', () => {
@@ -2347,9 +2428,13 @@
   async function pollLive() {
     try {
       const res = await fetch(API_BASE + '/api/live/tips');
-      if (!res.ok) return;
+      if (!res.ok) {
+        console.warn('[live poll] status', res.status);
+        return;
+      }
       const data = await res.json();
       const all = (data && data.tips) || [];
+      console.log('[live poll]', all.length, 'tips fetched');
       updateTicker(all);
       const fresh = all.filter(t => t.id > liveLastSeenId);
       if (!fresh.length) return;
@@ -2357,12 +2442,13 @@
       fresh.sort((a, b) => a.id - b.id);   // oldest first
       liveQueue.push.apply(liveQueue, fresh);
       drainLiveQueue();
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      console.error('[live poll] error', e);
+    }
   }
 
-  // News ticker — start scrolling as soon as we have one headline.
-  // Always renders enough copies to span any viewport, then duplicates the row
-  // for a seamless loop. Speed scales with content width.
+  // News ticker — CSS animation always runs; JS only updates the content
+  // and adjusts the duration to keep a consistent reading speed.
   let lastTickerSig = '';
   function updateTicker(tips) {
     if (!tickerContent) return;
@@ -2373,7 +2459,6 @@
 
     if (!latest.length) {
       tickerContent.innerHTML = '<span class="ticker-empty">Awaiting headlines…</span>';
-      tickerContent.style.animation = 'none';
       return;
     }
 
@@ -2382,18 +2467,17 @@
       '<span class="ticker-sep">✦</span>'
     ).join('');
 
-    // 8 copies — guaranteed to be wider than any practical screen even with 1 short headline.
+    // Lots of copies guarantees content is wider than any screen.
     const oneRow = block.repeat(8);
-
-    // Stop the current animation, swap the content, force a layout pass,
-    // then restart with a duration that gives a consistent scroll speed.
-    tickerContent.style.animation = 'none';
     tickerContent.innerHTML = oneRow + oneRow;
-    void tickerContent.offsetWidth;            // sync reflow → scrollWidth is now accurate
 
+    // Scale animation duration to actual content width so speed stays consistent.
     const rowWidth = tickerContent.scrollWidth / 2;
-    const seconds  = Math.max(12, rowWidth / 110);   // ~110 px/sec
-    tickerContent.style.animation = 'ticker-scroll ' + seconds + 's linear infinite';
+    if (rowWidth > 0) {
+      const seconds = Math.max(15, rowWidth / 100);
+      tickerContent.style.animationDuration = seconds + 's';
+    }
+    console.log('[ticker] rendered', latest.length, 'headlines, rowWidth=', rowWidth);
   }
 
   function showLiveIdle() {
