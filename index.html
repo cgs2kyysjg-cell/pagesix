@@ -1100,26 +1100,56 @@
   /* Active stage */
   .live-stage {
     position: absolute;
-    inset: 0;
+    inset: 0 0 64px 0;       /* reserve space for ticker */
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 100px 60px 80px;
+    padding: 100px 60px 60px;
     text-align: center;
     background: #000;
     overflow: hidden;
   }
+  .live-stage::before,
+  .live-stage::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 6px;
+    background: var(--yellow);
+    z-index: 4;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: edge-sweep 0.5s 0.05s cubic-bezier(.2,.9,.3,1) both;
+  }
+  .live-stage::before { top: 0; }
+  .live-stage::after  { bottom: 0; transform-origin: right; animation-delay: 0.15s; }
+  @keyframes edge-sweep {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
   .live-stage .kicker {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
     font-size: clamp(14px, 2vw, 24px);
     letter-spacing: 6px;
-    color: var(--yellow);
+    color: #fff;
     text-transform: uppercase;
     margin-bottom: 24px;
-    background: rgba(245, 216, 0, 0.12);
-    padding: 8px 18px;
-    border-left: 4px solid var(--yellow);
-    animation: fade-in 0.4s 0.4s both;
+    background: #b8000d;
+    padding: 10px 22px;
+    animation: kicker-pop 0.45s 0.2s cubic-bezier(.4,2,.4,.6) both;
+  }
+  @keyframes kicker-pop {
+    0%   { transform: scale(0.6) rotate(-3deg); opacity: 0; }
+    60%  { transform: scale(1.08) rotate(1deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  .headline-wrap {
+    display: flex; flex-direction: column;
+    align-items: center;
+    max-width: 95vw;
+    position: relative;
   }
   .live-stage .headline {
     font-family: 'Anton', 'Oswald', Impact, sans-serif;
@@ -1131,28 +1161,48 @@
     color: #fff;
     max-width: 95vw;
     word-break: break-word;
+    text-shadow: 0 0 24px rgba(184, 0, 13, 0.0);
+    animation: headline-glow 2s 0.6s infinite alternate;
+  }
+  @keyframes headline-glow {
+    from { text-shadow: 0 0 12px rgba(245, 216, 0, 0.15); }
+    to   { text-shadow: 0 0 48px rgba(245, 216, 0, 0.55); }
+  }
+  .headline-accent {
+    margin-top: 22px;
+    height: 8px;
+    width: 0;
+    background: var(--yellow);
+    box-shadow: 0 0 18px rgba(245, 216, 0, 0.7);
+    animation: accent-sweep 0.55s 0.5s cubic-bezier(.2,.9,.3,1.2) both;
+  }
+  @keyframes accent-sweep {
+    from { width: 0; }
+    to   { width: min(420px, 70vw); }
   }
   .live-stage .summary {
-    margin-top: 24px;
+    margin-top: 22px;
     font-family: 'Old Standard TT', 'Inter', serif;
     font-style: italic;
     font-size: clamp(18px, 2.2vw, 30px);
     line-height: 1.3;
     color: #ddd;
     max-width: 80vw;
-    animation: fade-in 0.4s 0.6s both;
+    animation: fade-in 0.4s 0.8s both;
   }
   .live-stage .byline {
-    margin-top: 36px;
+    margin-top: 28px;
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
     font-size: clamp(14px, 1.6vw, 22px);
     letter-spacing: 3px;
     color: var(--yellow);
     text-transform: uppercase;
-    animation: fade-in 0.4s 0.8s both;
+    animation: fade-in 0.4s 1s both;
   }
+  .live-stage .byline.hidden { display: none; }
 
+  /* White camera-flash */
   .live-flash {
     position: absolute; inset: 0;
     background: #fff;
@@ -1166,10 +1216,80 @@
     20% { opacity: 1; }
     100% { opacity: 0; }
   }
+
+  /* Red color wash that fires alongside every animation — makes it feel "alert" */
+  .live-stage-flash-red {
+    position: absolute; inset: 0;
+    background: #b8000d;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: screen;
+  }
+  .live-stage-flash-red.fire { animation: red-wash 0.7s cubic-bezier(.4,0,.6,1); }
+  @keyframes red-wash {
+    0%   { opacity: 0; }
+    18%  { opacity: 0.55; }
+    100% { opacity: 0; }
+  }
+
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
+
+  /* Bottom news ticker */
+  .live-ticker {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: #b8000d;
+    color: #fff;
+    display: flex;
+    align-items: stretch;
+    z-index: 8;
+    overflow: hidden;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-top: 4px solid var(--yellow);
+  }
+  .ticker-label {
+    background: #000;
+    color: var(--yellow);
+    padding: 0 26px;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    letter-spacing: 4px;
+    font-size: 16px;
+    flex-shrink: 0;
+    border-right: 4px solid var(--yellow);
+  }
+  .ticker-track {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-content {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: ticker-scroll 60s linear infinite;
+    font-size: 18px;
+    letter-spacing: 2px;
+    will-change: transform;
+  }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item { padding: 0 24px; }
+  .ticker-sep  { color: var(--yellow); padding: 0 4px; font-size: 14px; }
+  .ticker-empty { padding: 0 24px; opacity: 0.7; font-style: italic; }
+  /* Adjust idle padding so it doesn't sit behind the ticker */
+  .live-idle { padding-bottom: 96px; }
 
   /* === 10 ANIMATIONS === */
 
@@ -1670,13 +1790,24 @@
     </div>
 
     <div class="live-stage" id="live-stage" hidden>
+      <div class="live-stage-flash-red" id="live-stage-flash-red"></div>
       <div class="kicker" id="live-kicker"></div>
-      <div class="headline" id="live-headline"></div>
+      <div class="headline-wrap">
+        <div class="headline" id="live-headline"></div>
+        <div class="headline-accent" id="live-headline-accent"></div>
+      </div>
       <div class="summary" id="live-summary"></div>
       <div class="byline" id="live-byline"></div>
     </div>
 
     <div class="live-flash" id="live-flash"></div>
+
+    <div class="live-ticker" aria-hidden="true">
+      <div class="ticker-label">Latest</div>
+      <div class="ticker-track">
+        <div class="ticker-content" id="ticker-content"><span class="ticker-empty">Awaiting headlines…</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2052,11 +2183,14 @@
   const liveIdle       = document.getElementById('live-idle');
   const liveStage      = document.getElementById('live-stage');
   const liveFlash      = document.getElementById('live-flash');
+  const liveFlashRed   = document.getElementById('live-stage-flash-red');
+  const liveAccent     = document.getElementById('live-headline-accent');
   const liveExitBtn    = document.getElementById('live-exit');
   const liveKickerEl   = document.getElementById('live-kicker');
   const liveHeadlineEl = document.getElementById('live-headline');
   const liveSummaryEl  = document.getElementById('live-summary');
   const liveBylineEl   = document.getElementById('live-byline');
+  const tickerContent  = document.getElementById('ticker-content');
 
   const LIVE_ANIMATIONS = [
     'anim-slide-right',
@@ -2158,6 +2292,7 @@
       const data = await res.json();
       const tips = (data && data.tips) || [];
       liveLastSeenId = tips.length ? Math.max.apply(null, tips.map(t => t.id)) : 0;
+      updateTicker(tips);
     } catch (e) { /* ignore */ }
     showLiveIdle();
     if (livePollTimer) clearInterval(livePollTimer);
@@ -2169,13 +2304,45 @@
       const res = await fetch(API_BASE + '/api/live/tips');
       if (!res.ok) return;
       const data = await res.json();
-      const fresh = ((data && data.tips) || []).filter(t => t.id > liveLastSeenId);
+      const all = (data && data.tips) || [];
+      updateTicker(all);
+      const fresh = all.filter(t => t.id > liveLastSeenId);
       if (!fresh.length) return;
       liveLastSeenId = Math.max.apply(null, fresh.map(t => t.id));
       fresh.sort((a, b) => a.id - b.id);   // oldest first
       liveQueue.push.apply(liveQueue, fresh);
       drainLiveQueue();
     } catch (e) { /* ignore */ }
+  }
+
+  // News ticker — show the latest 5 headlines, scrolling continuously.
+  let lastTickerSig = '';
+  function updateTicker(tips) {
+    if (!tickerContent) return;
+    const latest = (tips || []).slice(0, 5);
+    const sig = latest.map(t => t.id + ':' + (t.headline || '')).join('|');
+    if (sig === lastTickerSig) return;   // nothing changed
+    lastTickerSig = sig;
+
+    if (!latest.length) {
+      tickerContent.innerHTML = '<span class="ticker-empty">Awaiting headlines…</span>';
+      tickerContent.style.animationDuration = '60s';
+      return;
+    }
+
+    const block = latest.map(t =>
+      '<span class="ticker-item">' + escapeHtml((t.headline || '').toUpperCase()) + '</span>' +
+      '<span class="ticker-sep">✦</span>'
+    ).join('');
+    // Duplicate the block so the loop seam is invisible.
+    tickerContent.innerHTML = block + block;
+
+    // Pace the scroll based on actual content width so it reads at a consistent speed.
+    requestAnimationFrame(() => {
+      const half = tickerContent.scrollWidth / 2;
+      const seconds = Math.max(20, half / 70); // ~70 px/sec
+      tickerContent.style.animationDuration = seconds + 's';
+    });
   }
 
   function showLiveIdle() {
@@ -2212,7 +2379,12 @@
       liveKickerEl.textContent = tip.section || 'Breaking';
       liveSummaryEl.textContent = tip.summary || '';
       liveSummaryEl.style.display = tip.summary ? '' : 'none';
-      liveBylineEl.textContent = tip.byline || '';
+
+      // Byline: hide entirely if it's the default "By Anonymous" or blank
+      const rawByline = (tip.byline || '').trim();
+      const isAnonymous = !rawByline || rawByline.toLowerCase() === 'by anonymous' || rawByline.toLowerCase() === 'anonymous';
+      liveBylineEl.textContent = isAnonymous ? '' : rawByline;
+      liveBylineEl.classList.toggle('hidden', isAnonymous);
 
       const anim = pickAnimation();
 
@@ -2223,13 +2395,24 @@
         liveHeadlineEl.textContent = tip.headline || '';
       }
 
+      // White camera flash for some animations
       if (anim === 'anim-flash') {
         liveFlash.classList.remove('fire');
         void liveFlash.offsetWidth;
         liveFlash.classList.add('fire');
       }
 
-      // Force reflow so the animation re-runs every time
+      // Force CSS animations on the supporting elements to re-fire each tip
+      const animResetEls = [liveKickerEl, liveSummaryEl, liveBylineEl, liveAccent];
+      animResetEls.forEach(el => { if (el) el.style.animation = 'none'; });
+      liveFlashRed.classList.remove('fire');
+
+      // Reflow once, then re-arm everything
+      void liveStage.offsetWidth;
+      animResetEls.forEach(el => { if (el) el.style.animation = ''; });
+      liveFlashRed.classList.add('fire');
+
+      // Force reflow so the named animation re-runs every time
       void liveStage.offsetWidth;
       liveStage.classList.add(anim);
 
