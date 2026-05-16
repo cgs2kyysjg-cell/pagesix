@@ -2416,7 +2416,14 @@
   // translates it left until it disappears off the left, then loops.
   // JS only writes the headlines into the element and adjusts duration.
   let lastTickerSig = '';
-  function updateTicker(tips) {
+  function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}function updateTicker(tips) {
     if (!tickerContent) return;
     const latest = (tips || []).slice(0, 5);
     const sig = latest.map(t => t.id + ':' + (t.headline || '')).join('|');
