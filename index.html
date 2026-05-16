@@ -943,6 +943,320 @@
   .admin-table td:nth-child(5) { white-space: nowrap; color: var(--muted); font-size: 12px; }
   .admin-link { color: var(--yellow); text-decoration: none; margin-left: 8px; opacity: 0.6; }
   .admin-link:hover { opacity: 1; text-decoration: underline; }
+
+  /* ---------- LIVE VIEW (breaking-news projector) ---------- */
+  .live-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #fff;
+    z-index: 200;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+  .live-overlay.open { display: block; }
+
+  /* Login state */
+  .live-login {
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px; text-align: center;
+  }
+  .live-login h2 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 64px);
+    margin-bottom: 14px;
+  }
+  .live-login p { color: #bbb; margin-bottom: 24px; font-size: 16px; max-width: 480px; }
+  .live-login input[type="password"] {
+    width: 320px; max-width: calc(100vw - 60px);
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 14px 18px;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 14px;
+    outline: none;
+  }
+  .live-login input:focus { border-color: var(--yellow); }
+  .live-login button {
+    background: var(--yellow);
+    color: #000;
+    border: 2px solid var(--yellow);
+    padding: 14px 32px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .live-login button:hover { background: #fff; border-color: #fff; }
+  .live-login-msg { color: #ff7777; font-size: 14px; margin-top: 14px; min-height: 18px; }
+
+  /* Feed (post-login) */
+  .live-feed { width: 100%; height: 100vh; position: relative; }
+
+  .live-badge {
+    position: absolute;
+    top: 30px; left: 50%;
+    transform: translateX(-50%);
+    background: #b8000d;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 1.8vw, 22px);
+    letter-spacing: 6px;
+    padding: 10px 28px;
+    z-index: 5;
+    text-transform: uppercase;
+  }
+  .live-badge::before {
+    content: '';
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    margin-right: 12px;
+    vertical-align: middle;
+    animation: live-pulse 1s infinite;
+  }
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.25; transform: scale(0.7); }
+  }
+
+  .live-exit {
+    position: absolute;
+    top: 30px; right: 30px;
+    z-index: 10;
+    background: transparent;
+    border: 1.5px solid #fff;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  .live-exit:hover { opacity: 1; background: #fff; color: #000; }
+
+  /* Idle state */
+  .live-idle {
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .live-idle h1 {
+    font-family: 'Bevan', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 100px);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .live-idle .cursor {
+    display: inline-block;
+    width: 0.45em;
+    height: 0.85em;
+    margin-left: 0.1em;
+    vertical-align: -0.05em;
+    background: var(--yellow);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { background: transparent; } }
+  .live-idle .hint {
+    color: #888;
+    font-size: clamp(14px, 1.8vw, 20px);
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Active stage */
+  .live-stage {
+    position: absolute;
+    inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 100px 60px 80px;
+    text-align: center;
+    background: #000;
+    overflow: hidden;
+  }
+  .live-stage .kicker {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 2vw, 24px);
+    letter-spacing: 6px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    background: rgba(245, 216, 0, 0.12);
+    padding: 8px 18px;
+    border-left: 4px solid var(--yellow);
+    animation: fade-in 0.4s 0.4s both;
+  }
+  .live-stage .headline {
+    font-family: 'Anton', 'Oswald', Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(48px, 9vw, 180px);
+    line-height: 0.9;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    color: #fff;
+    max-width: 95vw;
+    word-break: break-word;
+  }
+  .live-stage .summary {
+    margin-top: 24px;
+    font-family: 'Old Standard TT', 'Inter', serif;
+    font-style: italic;
+    font-size: clamp(18px, 2.2vw, 30px);
+    line-height: 1.3;
+    color: #ddd;
+    max-width: 80vw;
+    animation: fade-in 0.4s 0.6s both;
+  }
+  .live-stage .byline {
+    margin-top: 36px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: clamp(14px, 1.6vw, 22px);
+    letter-spacing: 3px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    animation: fade-in 0.4s 0.8s both;
+  }
+
+  .live-flash {
+    position: absolute; inset: 0;
+    background: #fff;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .live-flash.fire { animation: flash-fire 0.45s; }
+  @keyframes flash-fire {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /* === 10 ANIMATIONS === */
+
+  /* 1. slide from right */
+  .anim-slide-right .headline { animation: slide-right 0.7s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes slide-right {
+    0% { transform: translateX(110vw); opacity: 0; }
+    65% { transform: translateX(-30px); opacity: 1; }
+    100% { transform: translateX(0); }
+  }
+
+  /* 2. drop from top */
+  .anim-drop-down .headline { animation: drop-down 0.75s cubic-bezier(.2,.9,.3,1.4); }
+  @keyframes drop-down {
+    0% { transform: translateY(-110vh); }
+    60% { transform: translateY(40px); }
+    80% { transform: translateY(-18px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* 3. zoom burst */
+  .anim-zoom .headline { animation: zoom-in 0.6s cubic-bezier(.2,.9,.3,1.4); }
+  @keyframes zoom-in {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  /* 4. glitch */
+  .anim-glitch .headline { animation: glitch-shift 0.8s; }
+  @keyframes glitch-shift {
+    0% { text-shadow: none; transform: translate(0); opacity: 0; }
+    10% { text-shadow: 3px 0 0 #ff0040, -3px 0 0 #00f5ff; transform: translate(-3px, 2px); opacity: 1; }
+    25% { text-shadow: -3px 0 0 #ff0040, 3px 0 0 #00f5ff; transform: translate(3px, -2px); }
+    40% { text-shadow: 2px 0 0 #ff0040, -2px 0 0 #00f5ff; transform: translate(-2px, 1px); }
+    55% { text-shadow: -2px 0 0 #ff0040, 2px 0 0 #00f5ff; transform: translate(1px, -1px); }
+    75% { text-shadow: 1px 0 0 #ff0040, -1px 0 0 #00f5ff; transform: translate(-1px, 0); }
+    100% { text-shadow: none; transform: translate(0); }
+  }
+
+  /* 5. typewriter (JS-driven) */
+  .anim-typewriter .headline { animation: fade-in 0.2s; }
+  .anim-typewriter .headline::after {
+    content: '|';
+    color: var(--yellow);
+    margin-left: 0.05em;
+    animation: blink 0.7s step-end infinite;
+  }
+
+  /* 6. stamp */
+  .anim-stamp .headline { animation: stamp 0.55s cubic-bezier(.5,2,.3,.6); }
+  @keyframes stamp {
+    0% { transform: scale(4) rotate(-15deg); opacity: 0; filter: blur(10px); }
+    55% { transform: scale(0.9) rotate(3deg); opacity: 1; filter: blur(0); }
+    78% { transform: scale(1.06) rotate(-1deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  /* 7. shutter wipe */
+  .anim-shutter .headline { animation: shutter 0.75s ease-out; }
+  @keyframes shutter {
+    0% { clip-path: inset(0 50% 0 50%); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+  /* 8. spotlight (full-stage radial) */
+  .anim-spotlight .live-stage,
+  .live-stage.anim-spotlight { animation: spotlight 0.85s ease-out; }
+  @keyframes spotlight {
+    0% { clip-path: circle(0% at 50% 50%); }
+    100% { clip-path: circle(150% at 50% 50%); }
+  }
+
+  /* 9. shake explode */
+  .anim-shake .headline { animation: shake 0.75s, fade-in 0.2s; }
+  @keyframes shake {
+    0%, 100% { transform: translate(0); }
+    8%  { transform: translate(-14px, 5px) skewX(2deg); }
+    16% { transform: translate(12px, -7px) skewX(-2deg); }
+    24% { transform: translate(-10px, 9px); }
+    32% { transform: translate(10px, -5px); }
+    40% { transform: translate(-7px, 7px); }
+    50% { transform: translate(7px, -2px); }
+    60% { transform: translate(-4px, 3px); }
+    72% { transform: translate(4px, -2px); }
+    84% { transform: translate(-2px, 1px); }
+  }
+
+  /* 10. flash burst */
+  .anim-flash .headline { animation: flash-text 0.7s; }
+  @keyframes flash-text {
+    0% { opacity: 0; filter: brightness(3); transform: scale(1.05); }
+    25% { opacity: 1; filter: brightness(3); }
+    100% { opacity: 1; filter: brightness(1); transform: scale(1); }
+  }
+
+  @media (max-width: 700px) {
+    .live-stage { padding: 80px 24px 60px; }
+    .live-stage .headline { font-size: clamp(38px, 12vw, 80px); }
+    .live-stage .kicker { font-size: 13px; letter-spacing: 3px; }
+    .live-badge { top: 16px; padding: 8px 18px; font-size: 12px; letter-spacing: 4px; }
+    .live-exit { top: 16px; right: 16px; }
+  }
 </style>
 </head>
 <body>
@@ -1123,7 +1437,7 @@
   </aside>
 </main>
 
-<footer>The Page 6 Party · <span class="yellow">May 25</span> · All The News That Fits, We Print <a href="#admin" class="admin-link">·&nbsp;Admin</a></footer>
+<footer>The Page 6 Party · <span class="yellow">May 25</span> · All The News That Fits, We Print <a href="#admin" class="admin-link">·&nbsp;Admin</a> <a href="#live" class="admin-link">·&nbsp;Live</a></footer>
 
 <!-- Floating submit toggle -->
 <button class="submit-toggle" id="submit-toggle" aria-label="Submit a headline">
@@ -1178,6 +1492,7 @@
       <div class="admin-toolbar">
         <span id="admin-user-label"></span>
         <button class="admin-btn-sm" id="admin-refresh">Refresh</button>
+        <button class="admin-btn-sm" id="admin-live">Open Live View</button>
         <button class="admin-btn-sm" id="admin-export">Export CSV</button>
         <button class="admin-btn-sm" id="admin-signout">Sign Out</button>
       </div>
@@ -1189,6 +1504,40 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Live view overlay (visible when URL hash is #live) -->
+<div class="live-overlay" id="live-overlay" aria-hidden="true">
+  <!-- Login -->
+  <div class="live-login" id="live-login">
+    <h2>Live Feed</h2>
+    <p>Enter the password to start the breaking-news projection.</p>
+    <form id="live-login-form" autocomplete="off">
+      <input type="password" id="live-password" placeholder="Password" autocomplete="current-password" />
+      <button type="submit">Start Feed</button>
+    </form>
+    <div class="live-login-msg" id="live-login-msg"></div>
+  </div>
+
+  <!-- Feed -->
+  <div class="live-feed" id="live-feed" hidden>
+    <div class="live-badge">Breaking News</div>
+    <button class="live-exit" id="live-exit" type="button">Exit</button>
+
+    <div class="live-idle" id="live-idle">
+      <h1>Awaiting Headlines<span class="cursor"></span></h1>
+      <div class="hint">Scan a QR code at the party to file yours</div>
+    </div>
+
+    <div class="live-stage" id="live-stage" hidden>
+      <div class="kicker" id="live-kicker"></div>
+      <div class="headline" id="live-headline"></div>
+      <div class="summary" id="live-summary"></div>
+      <div class="byline" id="live-byline"></div>
+    </div>
+
+    <div class="live-flash" id="live-flash"></div>
   </div>
 </div>
 
@@ -1532,7 +1881,228 @@
     });
   }
 
+  // -----------------------------------------------------------------
+  // LIVE VIEW — full-screen breaking-news projector at #live.
+  // -----------------------------------------------------------------
+  const liveOverlay    = document.getElementById('live-overlay');
+  const liveLogin      = document.getElementById('live-login');
+  const liveFeed       = document.getElementById('live-feed');
+  const liveIdle       = document.getElementById('live-idle');
+  const liveStage      = document.getElementById('live-stage');
+  const liveFlash      = document.getElementById('live-flash');
+  const liveLoginMsg   = document.getElementById('live-login-msg');
+  const liveExitBtn    = document.getElementById('live-exit');
+  const liveKickerEl   = document.getElementById('live-kicker');
+  const liveHeadlineEl = document.getElementById('live-headline');
+  const liveSummaryEl  = document.getElementById('live-summary');
+  const liveBylineEl   = document.getElementById('live-byline');
+
+  const LIVE_ANIMATIONS = [
+    'anim-slide-right',
+    'anim-drop-down',
+    'anim-zoom',
+    'anim-glitch',
+    'anim-typewriter',
+    'anim-stamp',
+    'anim-shutter',
+    'anim-spotlight',
+    'anim-shake',
+    'anim-flash'
+  ];
+  const LIVE_POLL_MS = 3000;
+  const LIVE_DISPLAY_MS = 7000;   // total time each headline stays on screen
+  const LIVE_TYPE_SPEED_MS = 32;  // ms per character for typewriter
+
+  let liveLastSeenId = 0;
+  const liveQueue = [];
+  let livePlaying = false;
+  let livePollTimer = null;
+  let liveTypeTimer = null;
+
+  function isLiveRoute() { return window.location.hash === '#live'; }
+
+  function openLive() {
+    if (adminOverlay.classList.contains('open')) closeAdmin();
+    liveOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    refreshLiveState();
+  }
+
+  function closeLive() {
+    liveOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (livePollTimer) { clearInterval(livePollTimer); livePollTimer = null; }
+    if (liveTypeTimer) { clearInterval(liveTypeTimer); liveTypeTimer = null; }
+    if (window.location.hash === '#live') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
+  liveExitBtn.addEventListener('click', closeLive);
+  window.addEventListener('hashchange', () => { if (isLiveRoute()) openLive(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && liveOverlay.classList.contains('open')) closeLive();
+  });
+
+  async function refreshLiveState() {
+    const token = getAdminToken();
+    if (!token) {
+      liveLogin.hidden = false;
+      liveFeed.hidden = true;
+      return;
+    }
+    liveLogin.hidden = true;
+    liveFeed.hidden = false;
+    await initLiveFeed();
+  }
+
+  document.getElementById('live-login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('live-password').value;
+    liveLoginMsg.textContent = 'Signing in…';
+    try {
+      const res = await fetch(API_BASE + '/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      if (!res.ok) {
+        liveLoginMsg.textContent = res.status === 401 ? 'Wrong password.' : 'Login failed.';
+        return;
+      }
+      const data = await res.json();
+      if (data && data.token) {
+        setAdminToken(data.token);
+        document.getElementById('live-password').value = '';
+        liveLoginMsg.textContent = '';
+        refreshLiveState();
+      }
+    } catch (err) {
+      liveLoginMsg.textContent = 'Network error: ' + err.message;
+    }
+  });
+
+  // First load: mark all existing tips as seen so we only show NEW ones.
+  async function initLiveFeed() {
+    const token = getAdminToken();
+    if (!token) return;
+    try {
+      const res = await fetch(API_BASE + '/api/admin/tips', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        if (res.status === 401) { setAdminToken(''); refreshLiveState(); }
+        return;
+      }
+      const data = await res.json();
+      const tips = (data && data.tips) || [];
+      liveLastSeenId = tips.length ? Math.max.apply(null, tips.map(t => t.id)) : 0;
+    } catch (e) { /* ignore */ }
+    showLiveIdle();
+    if (livePollTimer) clearInterval(livePollTimer);
+    livePollTimer = setInterval(pollLive, LIVE_POLL_MS);
+  }
+
+  async function pollLive() {
+    const token = getAdminToken();
+    if (!token) return;
+    try {
+      const res = await fetch(API_BASE + '/api/admin/tips', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const fresh = ((data && data.tips) || []).filter(t => t.id > liveLastSeenId);
+      if (!fresh.length) return;
+      liveLastSeenId = Math.max.apply(null, fresh.map(t => t.id));
+      fresh.sort((a, b) => a.id - b.id);   // oldest first
+      liveQueue.push.apply(liveQueue, fresh);
+      drainLiveQueue();
+    } catch (e) { /* ignore */ }
+  }
+
+  function showLiveIdle() {
+    liveIdle.hidden = false;
+    liveStage.hidden = true;
+    LIVE_ANIMATIONS.forEach(a => liveStage.classList.remove(a));
+  }
+
+  async function drainLiveQueue() {
+    if (livePlaying) return;
+    while (liveQueue.length) {
+      livePlaying = true;
+      const tip = liveQueue.shift();
+      await playLiveTip(tip);
+    }
+    livePlaying = false;
+    showLiveIdle();
+  }
+
+  function pickAnimation() {
+    return LIVE_ANIMATIONS[Math.floor(Math.random() * LIVE_ANIMATIONS.length)];
+  }
+
+  function playLiveTip(tip) {
+    return new Promise(resolve => {
+      liveIdle.hidden = true;
+      liveStage.hidden = false;
+
+      // Reset previous animation state
+      LIVE_ANIMATIONS.forEach(a => liveStage.classList.remove(a));
+      if (liveTypeTimer) { clearInterval(liveTypeTimer); liveTypeTimer = null; }
+
+      // Populate content
+      liveKickerEl.textContent = tip.section || 'Breaking';
+      liveSummaryEl.textContent = tip.summary || '';
+      liveSummaryEl.style.display = tip.summary ? '' : 'none';
+      liveBylineEl.textContent = tip.byline || '';
+
+      const anim = pickAnimation();
+
+      if (anim === 'anim-typewriter') {
+        liveHeadlineEl.textContent = '';
+        typeText(liveHeadlineEl, tip.headline || '', LIVE_TYPE_SPEED_MS);
+      } else {
+        liveHeadlineEl.textContent = tip.headline || '';
+      }
+
+      if (anim === 'anim-flash') {
+        liveFlash.classList.remove('fire');
+        void liveFlash.offsetWidth;
+        liveFlash.classList.add('fire');
+      }
+
+      // Force reflow so the animation re-runs every time
+      void liveStage.offsetWidth;
+      liveStage.classList.add(anim);
+
+      setTimeout(resolve, LIVE_DISPLAY_MS);
+    });
+  }
+
+  function typeText(el, text, speedMs) {
+    let i = 0;
+    if (liveTypeTimer) clearInterval(liveTypeTimer);
+    liveTypeTimer = setInterval(() => {
+      i++;
+      el.textContent = text.slice(0, i);
+      if (i >= text.length) {
+        clearInterval(liveTypeTimer);
+        liveTypeTimer = null;
+      }
+    }, speedMs);
+  }
+
+  // Admin toolbar → "Open Live View"
+  const adminLiveBtn = document.getElementById('admin-live');
+  if (adminLiveBtn) {
+    adminLiveBtn.addEventListener('click', () => {
+      window.location.hash = '#live';
+    });
+  }
+
   if (isAdminRoute()) openAdmin();
+  if (isLiveRoute()) openLive();
 </script>
 </body>
 </html>
