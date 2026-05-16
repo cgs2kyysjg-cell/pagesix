@@ -1347,24 +1347,27 @@
     flex: 1;
     overflow: hidden;
     position: relative;
-    display: flex;
-    align-items: center;
   }
   .ticker-content {
-    display: inline-flex;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0;
     white-space: nowrap;
-    animation: ticker-scroll 60s linear infinite;
+    display: flex;
+    align-items: center;
     font-size: 18px;
     letter-spacing: 2px;
+    padding-left: 100%;
+    animation: ticker-roll 40s linear infinite;
     will-change: transform;
   }
-  @keyframes ticker-scroll {
+  @keyframes ticker-roll {
     0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-100%); }
   }
-  .ticker-item { padding: 0 24px; }
+  .ticker-item { padding: 0 22px; }
   .ticker-sep  { color: var(--yellow); padding: 0 4px; font-size: 14px; }
-  .ticker-empty { padding: 0 24px; opacity: 0.7; font-style: italic; }
+  .ticker-empty { padding: 0 22px; opacity: 0.7; font-style: italic; }
   /* Adjust idle padding so it doesn't sit behind the ticker */
   .live-idle { padding-bottom: 96px; }
 
@@ -1572,40 +1575,6 @@
   .quick-form button[disabled] { opacity: 0.55; cursor: not-allowed; }
   .quick-hint { color: #888; font-size: 13px; line-height: 1.5; }
 
-  .quick-success {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .quick-success .success-badge {
-    background: var(--yellow);
-    color: #000;
-    padding: 20px 36px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: clamp(22px, 5vw, 32px);
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    animation: success-pop 0.4s cubic-bezier(.4, 2, .5, .6);
-    border: 3px solid #000;
-    box-shadow: 0 0 0 3px var(--yellow);
-  }
-  @keyframes success-pop {
-    0% { transform: scale(0.4) rotate(-4deg); opacity: 0; }
-    60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
-    100% { transform: scale(1) rotate(0); }
-  }
-  .quick-success h2 {
-    font-family: 'Bevan', serif;
-    font-weight: 400;
-    font-size: clamp(28px, 6vw, 44px);
-    margin-bottom: 12px;
-  }
-  .quick-success p { color: #aaa; font-size: 16px; line-height: 1.4; }
   .quick-error { color: #ff7777; font-size: 14px; margin-top: 8px; min-height: 18px; }
 </style>
 </head>
@@ -1919,11 +1888,6 @@
     <p class="quick-hint">Tap send and it pops up on the screen at the party.<br>No name needed — submissions are anonymous.</p>
   </div>
 
-  <div class="quick-success" id="quick-success" hidden>
-    <div class="success-badge">✓ Sent</div>
-    <h2>It's on the screen.</h2>
-    <p>Submit another, or pass the phone to a friend.</p>
-  </div>
 </div>
 
 <script>
@@ -2447,8 +2411,10 @@
     }
   }
 
-  // News ticker — CSS animation always runs; JS only updates the content
-  // and adjusts the duration to keep a consistent reading speed.
+  // News ticker — classic CSS marquee. Content lives in an absolutely-positioned
+  // div with padding-left:100% so it starts off-screen right, and a CSS animation
+  // translates it left until it disappears off the left, then loops.
+  // JS only writes the headlines into the element and adjusts duration.
   let lastTickerSig = '';
   function updateTicker(tips) {
     if (!tickerContent) return;
@@ -2462,22 +2428,23 @@
       return;
     }
 
-    const block = latest.map(t =>
-      '<span class="ticker-item">' + escapeHtml((t.headline || '').toUpperCase()) + '</span>' +
-      '<span class="ticker-sep">✦</span>'
-    ).join('');
+    // Render headlines 6 times so the ticker stays packed with content.
+    let html = '';
+    for (let pass = 0; pass < 6; pass++) {
+      for (const t of latest) {
+        html += '<span class="ticker-item">' + escapeHtml((t.headline || '').toUpperCase()) + '</span>';
+        html += '<span class="ticker-sep">✦</span>';
+      }
+    }
+    tickerContent.innerHTML = html;
 
-    // Lots of copies guarantees content is wider than any screen.
-    const oneRow = block.repeat(8);
-    tickerContent.innerHTML = oneRow + oneRow;
-
-    // Scale animation duration to actual content width so speed stays consistent.
-    const rowWidth = tickerContent.scrollWidth / 2;
-    if (rowWidth > 0) {
-      const seconds = Math.max(15, rowWidth / 100);
+    // Pace duration to content width so speed feels consistent (~110 px/sec).
+    const w = tickerContent.scrollWidth;
+    if (w > 0) {
+      const seconds = Math.max(20, w / 110);
       tickerContent.style.animationDuration = seconds + 's';
     }
-    console.log('[ticker] rendered', latest.length, 'headlines, rowWidth=', rowWidth);
+    console.log('[ticker] rendered', latest.length, 'headlines, content width=', w);
   }
 
   function showLiveIdle() {
@@ -2511,7 +2478,10 @@
       if (liveTypeTimer) { clearInterval(liveTypeTimer); liveTypeTimer = null; }
 
       // Populate content
-      liveKickerEl.textContent = tip.section || 'Breaking';
+      const rawSection = (tip.section || '').trim();
+      const showKicker = rawSection && rawSection.toLowerCase() !== 'breaking';
+      liveKickerEl.textContent = showKicker ? rawSection : '';
+      liveKickerEl.style.display = showKicker ? '' : 'none';
       liveSummaryEl.textContent = tip.summary || '';
       liveSummaryEl.style.display = tip.summary ? '' : 'none';
 
@@ -2586,11 +2556,11 @@
   // -----------------------------------------------------------------
   const quickOverlay = document.getElementById('quick-overlay');
   const quickInner   = document.getElementById('quick-inner');
-  const quickSuccess = document.getElementById('quick-success');
   const quickForm    = document.getElementById('quick-form');
   const quickInput   = document.getElementById('quick-input');
   const quickError   = document.getElementById('quick-error');
   const quickExit    = document.getElementById('quick-exit');
+  const QUICK_BTN_LABEL = 'Send To The Big Screen';
 
   function isQuickRoute() { return window.location.hash === '#quick'; }
 
@@ -2612,22 +2582,29 @@
   }
   function showQuickForm() {
     quickInner.hidden = false;
-    quickSuccess.hidden = true;
     quickInput.value = '';
     quickError.textContent = '';
     const btn = quickForm.querySelector('button[type="submit"]');
-    if (btn) btn.disabled = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = QUICK_BTN_LABEL;
+    }
   }
   function showQuickSuccess() {
-    quickInner.hidden = true;
-    quickSuccess.hidden = false;
-    // Auto-reset after a few seconds so the next person can submit fast
-    setTimeout(() => {
-      if (quickOverlay.classList.contains('open')) {
-        showQuickForm();
-        setTimeout(() => quickInput.focus(), 50);
-      }
-    }, 2200);
+    // No celebration screen — just reset the form and flash the button briefly
+    // so the user knows it submitted, then refocus for the next entry.
+    quickInput.value = '';
+    quickError.textContent = '';
+    const btn = quickForm.querySelector('button[type="submit"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '✓ Sent';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = QUICK_BTN_LABEL;
+        if (quickOverlay.classList.contains('open')) quickInput.focus();
+      }, 1000);
+    }
   }
 
   quickExit.addEventListener('click', closeQuick);
